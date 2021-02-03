@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">QuizzApp</string>
+    <string name="test_header">Тест</string>
+    <string name="card_view_hello_txt">Привет</string>
+    <string name="enter_name_txt">Введи своё имя:</string>
+    <string name="hint_name">Имя</string>
+    <string name="btn_start_text">Начать</string>
+    <string name="btn_submit_txt">Ответить</string>
+    <string-array name="Question1">
+        <item>1</item>
+        <item>Вопрос 1</item>
+        <item>R.drawable.ic_launcher_foreground</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>1</item>
+    </string-array>
+</resources>

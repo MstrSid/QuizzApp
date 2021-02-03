@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="test_header">Тест</string>
+    <string name="card_view_hello_txt">Привет</string>
+    <string name="enter_name_txt">Введи своё имя:</string>
+    <string name="hint_name">Имя</string>
+    <string name="btn_start_text">Начать</string>
+    <string name="btn_submit_txt">Ответить</string>
+</resources>
