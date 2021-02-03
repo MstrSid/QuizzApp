@@ -6,4 +6,10 @@
     <string name="hint_name">Имя</string>
     <string name="btn_start_text">Начать</string>
     <string name="btn_submit_txt">Ответить</string>
+    <string name="test_over_text">ЗАКОНЧИТЬ ТЕСТ</string>
+    <string name="next_question_text">СЛЕДУЮЩИЙ ВОПРОС</string>
+    <string name="answer_text_btn">ОТВЕТИТЬ</string>
+    <string name="tv_result_text">Результат</string>
+    <string name="test_done_text">Тест закончен!</string>
+    <string name="btn_exit_text">ВЫЙТИ</string>
 </resources>
