@@ -4,10 +4,12 @@ object Constants {
     const val USER_NAME: String = "user_name"
     const val TOTAL_QUESTIONS: String = "total_questions"
     const val CORRECT_ANSWERS: String = "correct_answers"
+    var TEST_NUMBER: Int = 0
 
 
     fun getQuestions(): ArrayList<Question>{
         val questionList = ArrayList<Question>()
+        val testNumber = TEST_NUMBER
 
         val que1 = Question(1, "Назовите детали кроя для обработки прорезного кармана в рамку.",
         R.drawable.q1,
@@ -44,11 +46,62 @@ object Constants {
             "Верхнюю обтачку заутюживают на 1/3 ширины обтачки, а нижнюю пополам.",
             2)
 
-        questionList.add(que1)
-        questionList.add(que2)
-        questionList.add(que3)
-        questionList.add(que4)
-        questionList.add(que5)
+        val que1_2 = Question(1, "Цифрой 1' на рисунке обозначено:",
+            R.drawable.q1_2,
+            "Притачивание верхней обтачки к основной детали.",
+            "Притачивание нижней обтачки к основной детали.",
+            "Стачивание подкладки кармана.",
+            1)
+
+        val que2_2 = Question(2, "Цифрой 1 на рисунке обозначено:",
+            R.drawable.q1_2,
+            "Притачивание подкладки кармана к нижней обтачке.",
+            "Настрачивание подзора к подкладке кармана.",
+            "Притачивание нижней обтачки к основной детали.",
+            3)
+
+        val que3_2 = Question(3, "Цифрой 2 на рисунке обозначено:",
+            R.drawable.q1_2,
+            "Стачивание подкладки кармана.",
+            "Притачивание подкладки кармана к нижней обтачке.",
+            "Притачивание верхней обтачки к основной детали.",
+            2)
+
+        val que4_2 = Question(4, "Цифрой 3 на рисунке обозначено:",
+            R.drawable.q1_2,
+            "Настрачивание подзора к подкладке кармана.",
+            "Притачивание подкладки кармана с подзором в шов притачивания верхней обтачки.",
+            "Притачивание подкладки кармана к нижней обтачке.",
+            1)
+
+        val que5_2 = Question(5, "Цифрой 4 на рисунке обозначено:",
+            R.drawable.q1_2,
+            "Стачивание подкладки кармана.",
+            "Притачивание подкладки кармана с подзором в шов притачивания верхней обтачки.",
+            "Притачивание подкладки кармана к нижней обтачке.",
+            2)
+
+        val que6_2 = Question(6, "Цифрой 5 на рисунке обозначено:",
+            R.drawable.q1_2,
+            "Стачивание подкладки кармана.",
+            "Притачивание нижней обтачки к основной детали.",
+            "Притачивание верхней обтачки к основной детали.",
+            1)
+
+        if(testNumber==1) {
+            questionList.add(que1)
+            questionList.add(que2)
+            questionList.add(que3)
+            questionList.add(que4)
+            questionList.add(que5)
+        } else if(testNumber==2){
+            questionList.add(que1_2)
+            questionList.add(que2_2)
+            questionList.add(que3_2)
+            questionList.add(que4_2)
+            questionList.add(que5_2)
+            questionList.add(que6_2)
+        }
 
         return questionList
     }

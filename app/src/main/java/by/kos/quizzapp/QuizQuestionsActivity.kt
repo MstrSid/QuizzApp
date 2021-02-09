@@ -40,8 +40,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         tvOptionThree = findViewById(R.id.tv_option_three)
         btnSubmit = findViewById(R.id.btn_submit)
 
-
         mQuestionList = Constants.getQuestions()
+        progressBar.max = mQuestionList!!.size
         setQuestion()
 
         tvOptionOne.setOnClickListener(this)

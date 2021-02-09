@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         var btn_start = findViewById<Button>(R.id.btn_start)
+        var btn_start2 = findViewById<Button>(R.id.btn_start2)
         var et_name = findViewById<EditText>(R.id.et_name)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false)
@@ -22,11 +23,24 @@ class MainActivity : AppCompatActivity() {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         }
         btn_start.setOnClickListener{
-            if(et_name.text.toString().isEmpty()){
+            if(et_name.text.toString().trim().isEmpty()){
                 Toast.makeText(this, "Введите имя, пожалуйста.", Toast.LENGTH_SHORT).show()
             } else{
                 val intent = Intent(this, QuizQuestionsActivity::class.java)
                 intent.putExtra(Constants.USER_NAME, et_name.text.toString())
+                Constants.TEST_NUMBER = 1
+                startActivity(intent)
+                finish()
+            }
+        }
+
+        btn_start2.setOnClickListener{
+            if(et_name.text.toString().trim().isEmpty()){
+                Toast.makeText(this, "Введите имя, пожалуйста.", Toast.LENGTH_SHORT).show()
+            } else{
+                val intent = Intent(this, QuizQuestionsActivity::class.java)
+                intent.putExtra(Constants.USER_NAME, et_name.text.toString())
+                Constants.TEST_NUMBER = 2
                 startActivity(intent)
                 finish()
             }

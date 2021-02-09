@@ -1,10 +1,11 @@
 <resources>
-    <string name="app_name">QuizzApp</string>
+    <string name="app_name">Тесты</string>
     <string name="test_header">Тест</string>
     <string name="card_view_hello_txt">Привет</string>
     <string name="enter_name_txt">Введи своё имя:</string>
     <string name="hint_name">Имя</string>
-    <string name="btn_start_text">Начать</string>
+    <string name="btn_start_text">Тест 1</string>
+    <string name="btn_start_text2">Тест 2</string>
     <string name="btn_submit_txt">Ответить</string>
     <string name="test_over_text">ЗАКОНЧИТЬ ТЕСТ</string>
     <string name="next_question_text">СЛЕДУЮЩИЙ ВОПРОС</string>
