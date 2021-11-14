@@ -90,6 +90,7 @@
                     android:textColor="@color/white">
 
                 </Button>
+
                 <Button
                     android:id="@+id/btn_start2"
                     android:layout_width="match_parent"
@@ -97,8 +98,10 @@
                     android:layout_marginTop="16dp"
                     android:background="@color/design_default_color_primary"
                     android:text="@string/btn_start_text2"
+                    android:textColor="@color/white"
                     android:textSize="18sp"
-                    android:textColor="@color/white">
+                    tools:visibility="visible"
+                    android:visibility="gone">
 
                 </Button>
             </com.google.android.material.textfield.TextInputLayout>
