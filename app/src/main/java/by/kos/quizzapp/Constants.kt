@@ -56,7 +56,7 @@ object Constants {
         val que7 = Question(7, "Сколько лет Бобруйску?",
             R.drawable.main,
             "611",
-            "631",
+            "634",
             "621",
             2)
 
