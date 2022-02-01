@@ -14,36 +14,43 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        var btn_start = findViewById<Button>(R.id.btn_start)
-        var btn_start2 = findViewById<Button>(R.id.btn_start2)
-        var et_name = findViewById<EditText>(R.id.et_name)
+        val btnStart = findViewById<Button>(R.id.btn_start)
+        val btnStart2 = findViewById<Button>(R.id.btn_start2)
+        val etName = findViewById<EditText>(R.id.et_name)
+        val btnLearn = findViewById<Button>(R.id.btn_learn)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.setDecorFitsSystemWindows(false)
         } else {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         }
-        btn_start.setOnClickListener{
-            if(et_name.text.toString().trim().isEmpty()){
+        btnStart.setOnClickListener {
+            if (etName.text.toString().trim().isEmpty()) {
                 Toast.makeText(this, "Введите имя, пожалуйста.", Toast.LENGTH_SHORT).show()
-            } else{
+            } else {
                 val intent = Intent(this, QuizQuestionsActivity::class.java)
-                intent.putExtra(Constants.USER_NAME, et_name.text.toString())
+                intent.putExtra(Constants.USER_NAME, etName.text.toString())
                 Constants.TEST_NUMBER = 1
                 startActivity(intent)
                 finish()
             }
         }
 
-        btn_start2.setOnClickListener{
-            if(et_name.text.toString().trim().isEmpty()){
+        btnStart2.setOnClickListener {
+            if (etName.text.toString().trim().isEmpty()) {
                 Toast.makeText(this, "Введите имя, пожалуйста.", Toast.LENGTH_SHORT).show()
-            } else{
+            } else {
                 val intent = Intent(this, QuizQuestionsActivity::class.java)
-                intent.putExtra(Constants.USER_NAME, et_name.text.toString())
+                intent.putExtra(Constants.USER_NAME, etName.text.toString())
                 Constants.TEST_NUMBER = 2
                 startActivity(intent)
                 finish()
             }
+        }
+
+        btnLearn.setOnClickListener{
+            val intent = Intent(this, LearnMaterialsActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

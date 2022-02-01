@@ -9,8 +9,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QuizzApp">
-        <activity android:name=".activity_result"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".LearnMaterialsActivity"
+            android:exported="false"
+            android:configChanges="keyboardHidden|orientation|screenSize"/>
+        <activity
+            android:name=".ResultActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".QuizQuestionsActivity"
             android:screenOrientation="portrait"

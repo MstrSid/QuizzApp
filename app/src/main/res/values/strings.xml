@@ -13,6 +13,7 @@
     <string name="tv_result_text">Результат</string>
     <string name="test_done_text">Тест закончен!</string>
     <string name="btn_exit_text">ЗАВЕРШИТЬ</string>
+    <string name="home">Home</string>
     <string-array name="Question1">
         <item>1</item>
         <item>Вопрос 1</item>
