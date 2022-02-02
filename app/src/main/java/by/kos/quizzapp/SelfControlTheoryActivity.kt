@@ -118,11 +118,6 @@ class SelfControlTheoryActivity : AppCompatActivity() {
 
         defaultOptionsView()
         btnSubmit.text = getString(R.string.answer_text_btn)
-        /*if(mCurrentPosition==mQuestionList!!.size){
-            btnSubmit.text = getString(R.string.test_over_text)
-        } else {
-            btnSubmit.text = getString(R.string.answer_text_btn)
-        }*/
 
         progressBar.progress = mCurrentPosition
         tvProgress.text = "$mCurrentPosition/" + progressBar.max
@@ -143,64 +138,6 @@ class SelfControlTheoryActivity : AppCompatActivity() {
             option.background = ContextCompat.getDrawable(this, R.drawable.default_option_border_bg)
         }
     }
-
-    /*override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.tv_option_one -> {
-                selectedOptionView(tvOptionOne, 1)
-            }
-            R.id.tv_option_two -> {
-                selectedOptionView(tvOptionTwo, 2)
-            }
-            R.id.tv_option_three -> {
-                selectedOptionView(tvOptionThree, 3)
-            }
-            R.id.btn_submit -> {
-                if (btnSubmit.text == getString(R.string.next_question_text) || btnSubmit.text == getString(
-                        R.string.test_over_text
-                    )
-                ) {
-                    mSelectedOptionPosition = 0
-                }
-                if (mSelectedOptionPosition == 0) {
-                    mCurrentPosition++
-
-                    when {
-                        mCurrentPosition <= mQuestionList!!.size -> {
-                            setQuestion()
-                        }
-                        else -> {
-                            val intent = Intent(this, ResultActivity::class.java)
-                            intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
-                            intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionList!!.size)
-                            intent.putExtra(Constants.USER_NAME, "")
-                            startActivity(intent)
-                        }
-                    }
-                } else {
-                    val question = mQuestionList?.get(mCurrentPosition - 1)
-                    if (question!!.correctAnswer != mSelectedOptionPosition) {
-                        answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
-                    } else {
-                        mCorrectAnswers++
-                    }
-                    answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
-                    if (mCurrentPosition == mQuestionList!!.size) {
-                        btnSubmit.text = getString(R.string.test_over_text)
-                    } else {
-                        btnSubmit.text = getString(R.string.next_question_text)
-                    }
-                    mSelectedOptionPosition = 0
-                }
-            }
-            R.id.fabHome -> {
-                //AlertDialog.Builder
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
-
-        }
-    }*/
 
     private fun answerView(answer: Int, drawableView: Int) {
         when (answer) {

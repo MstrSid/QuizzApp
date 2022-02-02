@@ -5,7 +5,7 @@
     android:id="@+id/constraintView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuizQuestionsActivity">
+    tools:context=".SelfControlTheoryActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabHome_s"

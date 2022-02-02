@@ -48,14 +48,14 @@ class MiniTestsFragment : Fragment() {
             activity?.finish()
         }
 
-        /*btnTasks.setOnClickListener {
-            val intent = Intent(activity, QuizQuestionsActivity::class.java)
+        btnTasks.setOnClickListener {
+            val intent = Intent(activity, TaskActivity::class.java)
             intent.putExtra(Constants.USER_NAME, "")
-            Constants.TEST_NUMBER = 2
+            Constants.TASK_NUMBER = 1
             startActivity(intent)
             activity?.finish()
 
-        }*/
+        }
     }
 
     override fun onDestroyView() {

@@ -109,15 +109,10 @@ class QuizQuestionsActivity : AppCompatActivity() {
 
         defaultOptionsView()
         btnSubmit.text = getString(R.string.answer_text_btn)
-        /*if(mCurrentPosition==mQuestionList!!.size){
-            btnSubmit.text = getString(R.string.test_over_text)
-        } else {
-            btnSubmit.text = getString(R.string.answer_text_btn)
-        }*/
 
         progressBar.progress = mCurrentPosition
         tvProgress.text = "$mCurrentPosition/" + progressBar.max
-        tvQuestion.text = question!!.question
+        tvQuestion.text = question.question
         question.image?.let { ivImage.setImageResource(it) }
         tvOptionOne.text = question.optionOne
         tvOptionTwo.text = question.optionTwo
