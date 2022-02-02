@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import by.kos.quizzapp.databinding.ActivityQuizQuestionsBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
-
+class QuizQuestionsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityQuizQuestionsBinding
     private var mCurrentPosition: Int = 1
     private var mQuestionList: ArrayList<Question>? = null
     private var mSelectedOptionPosition: Int = 0
@@ -31,27 +31,76 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_quiz_questions)
+        binding = ActivityQuizQuestionsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         mUserName = intent.getStringExtra(Constants.USER_NAME)
-        progressBar = findViewById(R.id.progress_bar)
-        tvProgress = findViewById(R.id.tv_progress)
-        tvQuestion = findViewById(R.id.tv_question)
-        ivImage = findViewById(R.id.iv_image)
-        tvOptionOne = findViewById(R.id.tv_option_one)
-        tvOptionTwo = findViewById(R.id.tv_option_two)
-        tvOptionThree = findViewById(R.id.tv_option_three)
-        btnSubmit = findViewById(R.id.btn_submit)
-        fabHome = findViewById(R.id.fabHome)
+        progressBar = binding.progressBar
+        tvProgress = binding.tvProgress
+        tvQuestion = binding.tvQuestion
+        ivImage = binding.ivImage
+        tvOptionOne = binding.tvOptionOne
+        tvOptionTwo = binding.tvOptionTwo
+        tvOptionThree = binding.tvOptionThree
+        btnSubmit = binding.btnSubmit
+        fabHome = binding.fabHome
 
         mQuestionList = Constants.getQuestions()
         progressBar.max = mQuestionList!!.size
         setQuestion()
 
-        tvOptionOne.setOnClickListener(this)
-        tvOptionTwo.setOnClickListener(this)
-        tvOptionThree.setOnClickListener(this)
-        btnSubmit.setOnClickListener(this)
-        fabHome.setOnClickListener(this)
+        tvOptionOne.setOnClickListener {
+            selectedOptionView(tvOptionOne, 1)
+        }
+        tvOptionTwo.setOnClickListener {
+            selectedOptionView(tvOptionOne, 2)
+        }
+        tvOptionThree.setOnClickListener {
+            selectedOptionView(tvOptionOne, 3)
+        }
+        btnSubmit.setOnClickListener {
+            if (btnSubmit.text == getString(R.string.next_question_text) || btnSubmit.text == getString(
+                    R.string.test_over_text
+                )
+            ) {
+                mSelectedOptionPosition = 0
+            }
+            if (mSelectedOptionPosition == 0) {
+                mCurrentPosition++
+
+                when {
+                    mCurrentPosition <= mQuestionList!!.size -> {
+                        setQuestion()
+                    }
+                    else -> {
+                        val intent = Intent(this, ResultActivity::class.java)
+                        intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
+                        intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionList!!.size)
+                        intent.putExtra(Constants.USER_NAME, mUserName)
+                        startActivity(intent)
+                    }
+                }
+            } else {
+                val question = mQuestionList?.get(mCurrentPosition - 1)
+                if (question!!.correctAnswer != mSelectedOptionPosition) {
+                    answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
+                } else {
+                    mCorrectAnswers++
+                }
+                answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
+                if (mCurrentPosition == mQuestionList!!.size) {
+                    btnSubmit.text = getString(R.string.test_over_text)
+                } else {
+                    btnSubmit.text = getString(R.string.next_question_text)
+                }
+                mSelectedOptionPosition = 0
+            }
+        }
+        fabHome.setOnClickListener {
+            //AlertDialog.Builder
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
 
     private fun setQuestion() {
@@ -84,64 +133,6 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
             option.setTextColor(Color.parseColor("#7A8089"))
             option.typeface = Typeface.DEFAULT
             option.background = ContextCompat.getDrawable(this, R.drawable.default_option_border_bg)
-        }
-    }
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.tv_option_one -> {
-                selectedOptionView(tvOptionOne, 1)
-            }
-            R.id.tv_option_two -> {
-                selectedOptionView(tvOptionTwo, 2)
-            }
-            R.id.tv_option_three -> {
-                selectedOptionView(tvOptionThree, 3)
-            }
-            R.id.btn_submit -> {
-                if (btnSubmit.text == getString(R.string.next_question_text) || btnSubmit.text == getString(
-                        R.string.test_over_text
-                    )
-                ) {
-                    mSelectedOptionPosition = 0
-                }
-                if (mSelectedOptionPosition == 0) {
-                    mCurrentPosition++
-
-                    when {
-                        mCurrentPosition <= mQuestionList!!.size -> {
-                            setQuestion()
-                        }
-                        else -> {
-                            val intent = Intent(this, ResultActivity::class.java)
-                            intent.putExtra(Constants.CORRECT_ANSWERS, mCorrectAnswers)
-                            intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionList!!.size)
-                            intent.putExtra(Constants.USER_NAME, mUserName)
-                            startActivity(intent)
-                        }
-                    }
-                } else {
-                    val question = mQuestionList?.get(mCurrentPosition - 1)
-                    if (question!!.correctAnswer != mSelectedOptionPosition) {
-                        answerView(mSelectedOptionPosition, R.drawable.wrong_option_border_bg)
-                    } else {
-                        mCorrectAnswers++
-                    }
-                    answerView(question.correctAnswer, R.drawable.correct_option_border_bg)
-                    if (mCurrentPosition == mQuestionList!!.size) {
-                        btnSubmit.text = getString(R.string.test_over_text)
-                    } else {
-                        btnSubmit.text = getString(R.string.next_question_text)
-                    }
-                    mSelectedOptionPosition = 0
-                }
-            }
-            R.id.fabHome -> {
-                //AlertDialog.Builder
-                startActivity(Intent(this, MainActivity::class.java))
-                finish()
-            }
-
         }
     }
 

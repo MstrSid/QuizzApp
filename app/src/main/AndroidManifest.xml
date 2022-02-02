@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="by.kos.quizzapp">
+    package="by.kos.quizzapp" >
 
     <application
         android:allowBackup="true"
@@ -8,11 +8,15 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.QuizzApp">
+        android:theme="@style/Theme.QuizzApp" >
+        <activity
+            android:name=".SelfControlTheoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QuizzApp.NoActionBar" />
         <activity
             android:name=".LearnMaterialsActivity"
-            android:exported="false"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />
         <activity
             android:name=".ResultActivity"
             android:screenOrientation="portrait" />
@@ -23,7 +27,7 @@
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

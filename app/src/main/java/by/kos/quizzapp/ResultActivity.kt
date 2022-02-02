@@ -5,21 +5,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import by.kos.quizzapp.databinding.ActivityResultBinding
 
 class ResultActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityResultBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_result)
-        val tv_username = findViewById<TextView>(R.id.tv_username)
-        val tv_score = findViewById<TextView>(R.id.tv_score)
-        val btn_finish = findViewById<Button>(R.id.btn_finish)
+        binding = ActivityResultBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        val tvUsername = binding.tvUsername
+        val tvScore = binding.tvScore
+        val btnFinish = binding.btnFinish
 
         val username = intent.getStringExtra(Constants.USER_NAME)
         val totalQuestions = intent.getIntExtra(Constants.TOTAL_QUESTIONS, 0)
         val correctAnswers = intent.getIntExtra(Constants.CORRECT_ANSWERS, 0)
-        tv_username.text = username
-        tv_score.text = "Правильных ответов - $correctAnswers из $totalQuestions"
-        btn_finish.setOnClickListener{
+        tvUsername.text = username
+        tvScore.text = "Правильных ответов - $correctAnswers из $totalQuestions"
+        btnFinish.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
         }
     }

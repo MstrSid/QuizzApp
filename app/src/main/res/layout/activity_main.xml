@@ -4,115 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     android:background="@drawable/ic_bg"
+    android:gravity="center"
+    android:fillViewport="true"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:src="@drawable/emblem"
         android:layout_weight="0.55"
-        android:contentDescription="logo" />
+        android:contentDescription="logo"
+        android:src="@drawable/emblem" />
 
-    <TextView
-        android:id="@+id/app_name"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tblMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/test_header"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="20dp"
-        android:textSize="36sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
-        android:gravity="center"/>
+        android:layout_height="wrap_content">
 
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="120dp"
-        app:cardBackgroundColor="#FFF"
-        app:cardCornerRadius="8dp"
-        app:cardElevation="5dp">
-        <LinearLayout
-            android:background="@color/white"
-            android:layout_width="match_parent"
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-            <TextView
-                android:background="#FFF"
-                android:id="@+id/cv_text_view_hello"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/card_view_hello_txt"
-                android:textColor="@color/dark_grey"
-                android:textSize="30sp"
-                android:textStyle="bold"/>
-            <TextView
-                android:background="#FFF"
-                android:id="@+id/cv_text_view_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/enter_name_txt"
-                android:textColor="@color/light_gray"
-                android:textSize="16sp"/>
+            android:text="Тесты">
+        </com.google.android.material.tabs.TabItem>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/et_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_name"
-                    android:textColor="@color/dark_grey"
-                    android:textColorHint="@color/light_gray"
-                    android:textSize="20sp"
-                    android:lines="1">
 
-                </androidx.appcompat.widget.AppCompatEditText>
-                <Button
-                    android:id="@+id/btn_start"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rect_rounded_button"
-                    android:text="@string/btn_start_text"
-                    android:textSize="18sp"
-                    android:textColor="@color/white">
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Закрепление">
+        </com.google.android.material.tabs.TabItem>
 
-                </Button>
-                <Button
-                    android:id="@+id/btn_start2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rect_rounded_button"
-                    android:text="@string/btn_start_text2"
-                    android:textSize="18sp"
-                    android:textColor="@color/white">
 
-                </Button>
-            </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Учебное">
 
-        </LinearLayout>
+        </com.google.android.material.tabs.TabItem>
+    </com.google.android.material.tabs.TabLayout>
 
-    </androidx.cardview.widget.CardView>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/vPager"
+        android:layout_width="match_parent"
+        android:layout_height="400dp" />
 
     <Button
         android:id="@+id/btn_learn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="learn" />
-
 
 </LinearLayout>

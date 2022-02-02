@@ -3,13 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/drawable/default_option_border_bg.xml" value="0.2135" />
         <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/drawable/ic_fullscreen_close.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/drawable/rect_rounded_button.xml" value="0.2135" />
         <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/activity_learn_materials.xml" value="0.20199275362318841" />
         <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/activity_main.xml" value="0.22418478260869565" />
         <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/activity_quiz_questions.xml" value="0.2105978260869565" />
         <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/activity_result.xml" value="0.2105978260869565" />
+        <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/activity_self_control_theory.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/exo_playback_control_view.xml" value="0.1" />
+        <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/fragment_learning.xml" value="0.20244565217391305" />
+        <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/fragment_mini_tests.xml" value="0.20244565217391305" />
+        <entry key="..\:/AndroidStudioProjects/QuizzApp/app/src/main/res/layout/fragment_tests.xml" value="0.20244565217391305" />
       </map>
     </option>
   </component>
