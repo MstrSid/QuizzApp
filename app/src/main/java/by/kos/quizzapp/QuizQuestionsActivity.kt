@@ -53,10 +53,10 @@ class QuizQuestionsActivity : AppCompatActivity() {
             selectedOptionView(tvOptionOne, 1)
         }
         tvOptionTwo.setOnClickListener {
-            selectedOptionView(tvOptionOne, 2)
+            selectedOptionView(tvOptionTwo, 2)
         }
         tvOptionThree.setOnClickListener {
-            selectedOptionView(tvOptionOne, 3)
+            selectedOptionView(tvOptionThree, 3)
         }
         btnSubmit.setOnClickListener {
             if (btnSubmit.text == getString(R.string.next_question_text) || btnSubmit.text == getString(

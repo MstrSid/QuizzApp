@@ -111,7 +111,7 @@ class TaskActivity : AppCompatActivity() {
                     mSelectedOptionPosition.forEach { item ->
                         question.correctOptions.forEach { answer ->
                             if (item != answer) {
-                                answerView(answer, R.drawable.wrong_option_border_bg)
+                                answerView(item, R.drawable.wrong_option_border_bg)
                             }
                         }
                     }

@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:background="#FFF"
                 android:gravity="center"
-                android:text="@string/card_view_hello_txt"
+                android:text="@string/txt_self_check"
                 android:textColor="@color/dark_grey"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -42,7 +42,7 @@
                 android:background="#FFF"
                 android:gravity="center"
                 android:text="@string/txt_self_control"
-                android:textColor="@color/light_gray"
+                android:textColor="#757575"
                 android:textSize="16sp" />
 
                 <Button
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/rect_rounded_button"
-                    android:text="Вопросы по теории"
+                    android:text="@string/txt_questions_theory"
                     android:textColor="@color/white"
                     android:textSize="18sp">
                 </Button>
@@ -62,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/rect_rounded_button"
-                    android:text="Задания"
+                    android:text="@string/txt_tasks"
                     android:textColor="@color/white"
                     android:textSize="18sp">
 

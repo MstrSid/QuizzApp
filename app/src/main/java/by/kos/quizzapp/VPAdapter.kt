@@ -1,28 +1,20 @@
 package by.kos.quizzapp
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.*
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class VPAdapter(fm: FragmentManager, behavior: Int) : FragmentPagerAdapter(fm, behavior) {
+class VPAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
-    private val fragmentsList = ArrayList<Fragment>()
-    private val fragmentsTitle = ArrayList<String>()
-
-    override fun getCount(): Int {
-       return fragmentsList.size
+    override fun getItemCount(): Int {
+        return 3
     }
 
-    override fun getItem(position: Int): Fragment {
-        return fragmentsList[position]
-    }
-
-    public fun addFragment(fm: Fragment, title: String){
-        fragmentsList.add(fm)
-        fragmentsTitle.add(title)
-    }
-
-    override fun getPageTitle(position: Int): CharSequence? {
-        return fragmentsTitle[position]
+    override fun createFragment(position: Int): Fragment {
+        return when (position) {
+            0 -> TestsFragment()
+            1 -> MiniTestsFragment()
+            2 -> LearningFragment()
+            else -> TestsFragment()
+        }
     }
 }

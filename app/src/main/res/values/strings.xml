@@ -26,4 +26,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="txt_self_control">Здесь можно пройти самоконтроль</string>
+    <string name="txt_self_check">Закрепи знания</string>
+    <string name="txt_questions_theory">Вопросы по теории</string>
+    <string name="txt_tasks">Задания</string>
+    <string name="logo">logo</string>
+    <string name="image_task">image task</string>
 </resources>

@@ -21,7 +21,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:maxImageSize="40dp"
-        app:srcCompat="@drawable/ic_exit" />
+        app:srcCompat="@drawable/ic_exit"
+        tools:ignore="ImageContrastCheck" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -53,7 +54,8 @@
                 android:id="@+id/iv_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:contentDescription="@string/image_task" />
 
             <LinearLayout
                 android:id="@+id/ll_progress_details"

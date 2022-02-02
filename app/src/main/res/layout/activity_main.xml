@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_bg"
-    android:gravity="center"
     android:fillViewport="true"
+    android:gravity="center"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -14,37 +14,39 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="0.55"
-        android:contentDescription="logo"
-        android:src="@drawable/emblem" />
+        android:contentDescription="@string/logo"
+        android:src="@drawable/emblem"
+        tools:ignore="ImageContrastCheck" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tblMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        app:tabMode="fixed"
+        android:background="#C5B8FB">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Тесты">
-        </com.google.android.material.tabs.TabItem>
+            android:icon="@drawable/ic_test_24"
+            tools:text="Тесты" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:icon="@drawable/ic_check_24"
+            tools:text="Закрепление" />
 
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Закрепление">
-        </com.google.android.material.tabs.TabItem>
-
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Учебное">
-
-        </com.google.android.material.tabs.TabItem>
+            android:icon="@drawable/ic_book_24"
+            tools:text="Учебное" />
     </com.google.android.material.tabs.TabLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vPager"
         android:layout_width="match_parent"
         android:layout_height="400dp" />
@@ -53,6 +55,6 @@
         android:id="@+id/btn_learn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="learn" />
+        tools:text="learn" />
 
 </LinearLayout>
