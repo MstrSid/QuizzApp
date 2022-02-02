@@ -15,7 +15,7 @@ class TaskActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTaskBinding
     private var mCurrentPosition: Int = 1
     private var mQuestionList: ArrayList<QuestionMulti>? = null
-    private var mSelectedOptionPosition = ArrayList<Int>()
+    private var mSelectedOptionPosition: MutableList<Int> = mutableListOf()
     private lateinit var progressBar: ProgressBar
     private lateinit var tvProgress: TextView
     private lateinit var tvQuestion: TextView
@@ -27,7 +27,6 @@ class TaskActivity : AppCompatActivity() {
     private lateinit var btnSubmit: Button
     private lateinit var fabHome: FloatingActionButton
     private var mCorrectAnswers: Int = 0
-    private var mUserName: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -115,7 +114,7 @@ class TaskActivity : AppCompatActivity() {
                             }
                         }
                     }
-                    if (question.correctOptions == mSelectedOptionPosition) {
+                    if (question.correctOptions.sorted() == mSelectedOptionPosition.sorted()) {
                         mCorrectAnswers++
                     }
                     question.correctOptions.forEach { item ->
