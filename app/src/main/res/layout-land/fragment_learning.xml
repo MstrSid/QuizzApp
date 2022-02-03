@@ -19,142 +19,128 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#EDFBEC"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/cv_text_view_hello"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#EDFBEC"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:text="@string/txt_learn_materials"
-                android:textColor="@color/dark_grey"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/cv_text_view_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#EDFBEC"
-                android:gravity="center"
-                android:text="@string/txt_tehory_learn"
-                android:textColor="#616161"
-                android:textSize="16sp" />
-
-            <View
-                android:id="@+id/divider2"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="5dp"
-                android:background="?android:attr/listDivider" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.8" />
+                android:layout_weight="0.5">
 
                 <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="0dp"
+                    android:id="@+id/cv_text_view_hello"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="Обработка прорезных карманов в рамку с использованием машины-автомат Jack JK-T 5875-68"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/ivJack"
-                    android:layout_width="0dp"
-                    android:layout_height="70dp"
-                    android:layout_margin="5dp"
-                    android:alpha="0.55"
-                    android:background="@drawable/jack_video_preview"
-                    android:src="@drawable/ic_play_circle_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/guideline3"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:elevation="10dp"/>
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <View
-                android:id="@+id/divider3"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:background="?android:attr/listDivider" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.8" />
+                    android:background="#EDFBEC"
+                    android:gravity="center"
+                    android:text="@string/txt_learn_materials"
+                    android:textColor="@color/dark_grey"
+                    android:textSize="30sp"
+                    android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="0dp"
+                    android:id="@+id/cv_text_view_name"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:text="Обработка прорезных карманов в условиях производства"
-                    android:textSize="16sp"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline4"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:background="#EDFBEC"
+                    android:gravity="center"
+                    android:text="@string/txt_tehory_learn"
+                    android:textColor="#616161"
+                    android:textSize="16sp" />
 
-                <ImageView
-                    android:id="@+id/ivFactory"
-                    android:layout_width="0dp"
-                    android:layout_height="70dp"
-                    android:layout_margin="5dp"
-                    android:minHeight="120dp"
-                    android:alpha="0.55"
-                    android:background="@drawable/factory_video_preview"
-                    android:src="@drawable/ic_play_circle_24"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/guideline4"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:elevation="10dp"/>
+                <Button
+                    android:id="@+id/btnStartConspect"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/rect_rounded_button"
+                    android:text="@string/txt_button_conspect"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+            </LinearLayout>
 
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <View
-                android:id="@+id/divider"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="0.5">
 
-            <Button
-                android:id="@+id/btnStartConspect"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/rect_rounded_button"
-                android:text="@string/txt_button_conspect"
-                android:textColor="@color/white"
-                android:textSize="22sp" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.7" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/jack_jk_t_5875_68"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <ImageView
+                        android:id="@+id/ivJack"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_margin="5dp"
+                        android:alpha="0.55"
+                        android:background="@drawable/jack_video_preview"
+                        android:elevation="10dp"
+                        android:src="@drawable/ic_play_circle_24"
+                        app:layout_constraintBottom_toTopOf="@+id/divider4"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <View
+                        android:id="@+id/divider4"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="5dp"
+                        android:background="?android:attr/listDivider"
+                        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="@string/txt_fabric"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toBottomOf="@+id/divider4"
+                        app:layout_constraintStart_toStartOf="parent"/>
+
+
+                    <ImageView
+                        android:id="@+id/ivFactory"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_margin="5dp"
+                        android:alpha="0.55"
+                        android:background="@drawable/factory_video_preview"
+                        android:elevation="10dp"
+                        android:src="@drawable/ic_play_circle_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline3"
+                        app:layout_constraintTop_toBottomOf="@+id/divider4" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
 
         </LinearLayout>
 

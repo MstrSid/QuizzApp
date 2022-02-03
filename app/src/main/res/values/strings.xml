@@ -36,4 +36,10 @@
     <string name="txt_button_conspect">Конспект лекций</string>
     <string name="txt_button_video">Видео</string>
     <string name="txt_title_main">Обработка прорезного кармана</string>
+    <string name="jack_jk_t_5875_68">Обработка прорезных карманов в рамку с использованием машины-автомат Jack JK-T 5875-68</string>
+    <string name="txt_fabric">Обработка прорезных карманов в условиях производства</string>
+    <string name="txt_confirm">Подтверждение</string>
+    <string name="txt_exit_question">Прервать тест и выйти на главный экран?</string>
+    <string name="exit_yes">Да</string>
+    <string name="exit_no">Нет</string>
 </resources>

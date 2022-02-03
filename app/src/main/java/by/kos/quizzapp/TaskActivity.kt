@@ -1,5 +1,6 @@
 package by.kos.quizzapp
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -87,6 +88,7 @@ class TaskActivity : AppCompatActivity() {
                     R.string.test_over_text
                 )
             ) {
+                btnSubmit.isEnabled = true
                 mSelectedOptionPosition = ArrayList()
             }
             if (mSelectedOptionPosition.size == 0) {
@@ -136,9 +138,7 @@ class TaskActivity : AppCompatActivity() {
 
         }
         fabHome.setOnClickListener {
-            //AlertDialog.Builder
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            onBackPressed()
         }
     }
 
@@ -149,6 +149,7 @@ class TaskActivity : AppCompatActivity() {
         chOptionTwo.isChecked = false
         chOptionThree.isChecked = false
         chOptionFour.isChecked = false
+        btnSubmit.isEnabled = false
         btnSubmit.text = getString(R.string.answer_text_btn)
 
         progressBar.progress = mCurrentPosition
@@ -193,9 +194,25 @@ class TaskActivity : AppCompatActivity() {
 
     private fun selectedOptionView(ch: CheckBox, selectedOptionNum: Int) {
         defaultOptionsView()
+        btnSubmit.isEnabled = true
         //mSelectedOptionPosition = selectedOptionNum
         ch.setTextColor(Color.parseColor("#7A8089"))
         ch.setTypeface(ch.typeface, Typeface.BOLD)
         ch.background = ContextCompat.getDrawable(this, R.drawable.selected_option_border_bg)
+    }
+
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.txt_confirm))
+        builder.setMessage(getString(R.string.txt_exit_question))
+
+        builder.setPositiveButton(getString(R.string.exit_yes)) { dialog, which ->
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
+        builder.setNegativeButton(getString(R.string.exit_no)) { dialog, which ->
+        }
+        builder.show()
     }
 }

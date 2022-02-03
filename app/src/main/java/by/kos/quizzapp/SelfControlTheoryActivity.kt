@@ -1,5 +1,6 @@
 package by.kos.quizzapp
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -70,6 +71,7 @@ class SelfControlTheoryActivity : AppCompatActivity() {
                     R.string.test_over_text
                 )
             ) {
+                btnSubmit.isEnabled = true
                 mSelectedOptionPosition = 0
             }
             if (mSelectedOptionPosition == 0) {
@@ -105,19 +107,15 @@ class SelfControlTheoryActivity : AppCompatActivity() {
             }
         }
         fabHome.setOnClickListener {
-            //AlertDialog.Builder
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            onBackPressed()
         }
-
-
     }
 
     private fun setQuestion() {
-
         val question = mQuestionList!![mCurrentPosition - 1]
 
         defaultOptionsView()
+        btnSubmit.isEnabled = false
         btnSubmit.text = getString(R.string.answer_text_btn)
 
         progressBar.progress = mCurrentPosition
@@ -157,10 +155,25 @@ class SelfControlTheoryActivity : AppCompatActivity() {
 
     private fun selectedOptionView(tv: TextView, selectedOptionNum: Int) {
         defaultOptionsView()
+        btnSubmit.isEnabled = true
         mSelectedOptionPosition = selectedOptionNum
         tv.setTextColor(Color.parseColor("#7A8089"))
         tv.setTypeface(tv.typeface, Typeface.BOLD)
         tv.background = ContextCompat.getDrawable(this, R.drawable.selected_option_border_bg)
     }
 
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.txt_confirm))
+        builder.setMessage(getString(R.string.txt_exit_question))
+
+        builder.setPositiveButton(getString(R.string.exit_yes)) { dialog, which ->
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+
+        builder.setNegativeButton(getString(R.string.exit_no)) { dialog, which ->
+        }
+        builder.show()
+    }
 }
