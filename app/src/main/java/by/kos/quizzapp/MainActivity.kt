@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
-    private lateinit var btnLearn: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,13 +46,5 @@ class MainActivity : AppCompatActivity() {
 
             }
         }.attach()
-
-        btnLearn = findViewById(R.id.btn_learn)
-
-        btnLearn.setOnClickListener {
-            val intent = Intent(this, LearnMaterialsActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
     }
 }

@@ -85,6 +85,7 @@ class SelfControlTheoryActivity : AppCompatActivity() {
                         intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionList!!.size)
                         intent.putExtra(Constants.USER_NAME, "")
                         startActivity(intent)
+                        finish()
                     }
                 }
             } else {

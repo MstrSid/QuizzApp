@@ -23,6 +23,7 @@ class LearnMaterialsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_learn_materials)
         var fullscreen = false
+        val videoName = intent.getIntExtra("videoName", 0)
 
 
         playerView = findViewById<PlayerView>(R.id.simpleExoPlayerView) as PlayerView
@@ -40,7 +41,7 @@ class LearnMaterialsActivity : AppCompatActivity() {
                 if (supportActionBar != null) {
                     supportActionBar!!.show()
                 }
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 val params = playerView.layoutParams as RelativeLayout.LayoutParams
                 params.width = ViewGroup.LayoutParams.MATCH_PARENT
                 params.height = (200 * applicationContext.resources.displayMetrics.density).toInt()
@@ -73,7 +74,7 @@ class LearnMaterialsActivity : AppCompatActivity() {
             MediaItem.fromUri(
                 Uri.parse(
                     "android.resource://"
-                            + packageName + "/" + R.raw.jack
+                            + packageName + "/" + videoName
                 )
             )
         )

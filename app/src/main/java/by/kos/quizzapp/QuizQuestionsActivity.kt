@@ -78,6 +78,7 @@ class QuizQuestionsActivity : AppCompatActivity() {
                         intent.putExtra(Constants.TOTAL_QUESTIONS, mQuestionList!!.size)
                         intent.putExtra(Constants.USER_NAME, mUserName)
                         startActivity(intent)
+                        finish()
                     }
                 }
             } else {
