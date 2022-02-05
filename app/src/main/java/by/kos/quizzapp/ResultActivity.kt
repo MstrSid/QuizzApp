@@ -24,6 +24,7 @@ class ResultActivity : AppCompatActivity() {
         tvScore.text = "Правильных ответов - $correctAnswers из $totalQuestions"
         btnFinish.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }
