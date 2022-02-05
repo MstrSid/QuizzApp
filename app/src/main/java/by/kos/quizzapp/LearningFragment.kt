@@ -22,7 +22,7 @@ class LearningFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLearningBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -45,6 +45,13 @@ class LearningFragment : Fragment() {
             intent.putExtra("videoName", R.raw.factory)
             startActivity(intent)
             //activity?.finish()
+        }
+
+        btnConspect.setOnClickListener {
+            val intent = Intent(activity, PdfActivity::class.java)
+            //intent.putExtra("filePdf", R.raw.pocket)
+            startActivity(intent)
+            activity?.finish()
         }
     }
 

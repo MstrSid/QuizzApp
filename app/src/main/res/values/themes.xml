@@ -18,6 +18,4 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-    <style name="Theme.QuizzApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    <style name="Theme.QuizzApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

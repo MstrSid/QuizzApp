@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Обработка прорезного кармана</string>
-    <string name="test_header">Тест</string>
     <string name="card_view_hello_txt">Привет</string>
     <string name="enter_name_txt">Введи своё имя:</string>
     <string name="hint_name">Имя</string>
@@ -14,32 +13,28 @@
     <string name="test_done_text">Тест закончен!</string>
     <string name="btn_exit_text">ЗАВЕРШИТЬ</string>
     <string name="home">Home</string>
-    <string-array name="Question1">
-        <item>1</item>
-        <item>Вопрос 1</item>
-        <item>R.drawable.ic_launcher_foreground</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>1</item>
-    </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="txt_self_control">Здесь можно пройти самоконтроль</string>
     <string name="txt_self_check">Закрепи знания</string>
     <string name="txt_questions_theory">Вопросы по теории</string>
     <string name="txt_tasks">Задания</string>
-    <string name="logo">logo</string>
     <string name="image_task">image task</string>
     <string name="txt_learn_materials">Учебные материалы</string>
     <string name="txt_tehory_learn">Здесь можно ознакомиться с теорией</string>
     <string name="txt_button_conspect">Конспект лекций</string>
-    <string name="txt_button_video">Видео</string>
     <string name="txt_title_main">Обработка прорезного кармана</string>
-    <string name="jack_jk_t_5875_68">Обработка прорезных карманов в рамку с использованием машины-автомат Jack JK-T 5875-68</string>
+    <string name="jack_jk_t_5875_68">Обработка прорезных карманов в рамку с использованием машины–автомат Jack JK–T 5875–68</string>
     <string name="txt_fabric">Обработка прорезных карманов в условиях производства</string>
     <string name="txt_confirm">Подтверждение</string>
     <string name="txt_exit_question">Прервать тест и выйти на главный экран?</string>
     <string name="exit_yes">Да</string>
     <string name="exit_no">Нет</string>
+    <string name="alert_info_text"><![CDATA[<p>Учреждение образования «Бобруйский государственный технологический колледж»</p> <p>Олюнина Татьяна Васильевна, преподаватель</p> <p>Космочюс Евгений Пятрасович, инженер-программист</p>]]></string>
+    <string name="txt_about">О разработке</string>
+    <string name="txt_close">Закрыть</string>
+    <string name="zoom_in">Zoom In</string>
+    <string name="zoom_out">Zoom Out</string>
+    <string name="exit">Exit</string>
+    <string name="exit_main_question">Выйти на главный экран?</string>
+    <string name="info">Info</string>
+    <string name="txt_exit_another">Выйти из приложения?</string>
 </resources>
