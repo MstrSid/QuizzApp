@@ -1,4 +1,3 @@
-
 package by.kos.quizzapp
 
 import android.annotation.SuppressLint
@@ -39,19 +38,38 @@ class MainActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
 
         if (currentUser != null) {
+
             Log.d(
                 "FirebaseTest",
                 "Уже авторизован. UID: ${currentUser.uid}"
             )
+
+            // Запускаем мониторинг сети
+            NetworkMonitor.start(applicationContext)
+
+            // Проверяем ожидающие результаты
+            PendingResultSync.sync(applicationContext)
+
         } else {
+
             auth.signInAnonymously()
                 .addOnCompleteListener(this) { task ->
+
                     if (task.isSuccessful) {
+
                         Log.d(
                             "FirebaseTest",
                             "Анонимная авторизация успешна. UID: ${auth.currentUser?.uid}"
                         )
+
+                        // Запускаем мониторинг после авторизации
+                        NetworkMonitor.start(applicationContext)
+
+                        // Проверяем ожидающие результаты
+                        PendingResultSync.sync(applicationContext)
+
                     } else {
+
                         Log.e(
                             "FirebaseTest",
                             "Ошибка авторизации",
@@ -67,6 +85,7 @@ class MainActivity : AppCompatActivity() {
 
         // Информация о приложении
         fabInfo.setOnClickListener {
+
             val builder = AlertDialog.Builder(this)
 
             builder.setTitle(getString(R.string.txt_about))
@@ -102,7 +121,9 @@ class MainActivity : AppCompatActivity() {
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+
             when (position) {
+
                 0 -> {
                     tab.text = "Тесты"
                     tab.icon = ContextCompat.getDrawable(
@@ -127,6 +148,7 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
             }
+
         }.attach()
 
         // При первом запуске запрашиваем данные студента
@@ -196,6 +218,7 @@ class MainActivity : AppCompatActivity() {
         dialog.setCanceledOnTouchOutside(false)
 
         dialog.setOnShowListener {
+
             dialog.getButton(
                 AlertDialog.BUTTON_POSITIVE
             ).setOnClickListener {
@@ -204,6 +227,7 @@ class MainActivity : AppCompatActivity() {
                 val group = etGroup.text.toString().trim()
 
                 when {
+
                     name.isBlank() -> {
                         etName.error = "Введите ФИО"
                         etName.requestFocus()
@@ -215,6 +239,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     else -> {
+
                         StudentSession.saveStudent(
                             this,
                             name,
@@ -237,6 +262,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     // Подтверждение выхода из приложения
+    @Suppress("DEPRECATION")
     override fun onBackPressed() {
 
         val builder = AlertDialog.Builder(this)

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -15,8 +16,10 @@ import androidx.core.content.ContextCompat
 import by.kos.quizzapp.databinding.ActivitySelfControlTheoryBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import org.json.JSONArray
+import org.json.JSONObject
 
 class SelfControlTheoryActivity : AppCompatActivity() {
 
@@ -41,12 +44,23 @@ class SelfControlTheoryActivity : AppCompatActivity() {
     private var isTestCompleted = false
     private var isSaving = false
 
-    private val resultDocument = FirebaseFirestore.getInstance()
-        .collection("test_results")
-        .document()
+    // Документ Firestore для текущей попытки
+    private lateinit var resultDocument: DocumentReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Восстанавливаем идентификатор документа
+        val resultId = savedInstanceState
+            ?.getString("result_document_id")
+            ?: FirebaseFirestore.getInstance()
+                .collection("test_results")
+                .document()
+                .id
+
+        resultDocument = FirebaseFirestore.getInstance()
+            .collection("test_results")
+            .document(resultId)
 
         binding = ActivitySelfControlTheoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -63,32 +77,105 @@ class SelfControlTheoryActivity : AppCompatActivity() {
         mQuestionList = Constants.getQuestions()
         progressBar.max = mQuestionList!!.size
 
-        setQuestion()
+        // Восстанавливаем состояние тестирования
+        if (savedInstanceState != null) {
 
+            mCurrentPosition = savedInstanceState.getInt(
+                "current_position",
+                1
+            )
+
+            mCorrectAnswers = savedInstanceState.getInt(
+                "correct_answers",
+                0
+            )
+
+            mSelectedOptionPosition = savedInstanceState.getInt(
+                "selected_option",
+                0
+            )
+
+            isTestCompleted = savedInstanceState.getBoolean(
+                "test_completed",
+                false
+            )
+
+            @Suppress("DEPRECATION")
+            val savedAnswers =
+                savedInstanceState.getParcelableArrayList<StudentAnswer>(
+                    "student_answers"
+                )
+
+            studentAnswers.clear()
+            studentAnswers.addAll(savedAnswers ?: emptyList())
+        }
+
+        // Отображаем восстановленный вопрос
+        if (isTestCompleted) {
+
+            btnSubmit.text = "Повторить сохранение"
+            btnSubmit.isEnabled = true
+
+            progressBar.progress = progressBar.max
+            tvProgress.text = "${progressBar.max}/${progressBar.max}"
+
+            tvQuestion.text = "Тестирование завершено"
+
+            tvOptionOne.text = ""
+            tvOptionTwo.text = ""
+            tvOptionThree.text = ""
+
+        } else {
+
+            val selectedPosition = mSelectedOptionPosition
+
+            setQuestion()
+
+            // Восстанавливаем выделенный вариант
+            if (selectedPosition != 0) {
+
+                val selectedView = when (selectedPosition) {
+                    1 -> tvOptionOne
+                    2 -> tvOptionTwo
+                    3 -> tvOptionThree
+                    else -> null
+                }
+
+                selectedView?.let {
+                    selectedOptionView(it, selectedPosition)
+                }
+            }
+        }
+
+        // Выбор первого варианта
         tvOptionOne.setOnClickListener {
-            if (!isTestCompleted) {
+            if (!isTestCompleted && !isSaving) {
                 selectedOptionView(tvOptionOne, 1)
             }
         }
 
+        // Выбор второго варианта
         tvOptionTwo.setOnClickListener {
-            if (!isTestCompleted) {
+            if (!isTestCompleted && !isSaving) {
                 selectedOptionView(tvOptionTwo, 2)
             }
         }
 
+        // Выбор третьего варианта
         tvOptionThree.setOnClickListener {
-            if (!isTestCompleted) {
+            if (!isTestCompleted && !isSaving) {
                 selectedOptionView(tvOptionThree, 3)
             }
         }
 
+        // Подтверждение ответа
         btnSubmit.setOnClickListener {
 
             if (isSaving) {
                 return@setOnClickListener
             }
 
+            // Повторное сохранение завершённого теста
             if (isTestCompleted) {
                 saveTestResult {
                     openResultActivity()
@@ -96,12 +183,14 @@ class SelfControlTheoryActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Ответ не выбран
             if (mSelectedOptionPosition == 0) {
                 return@setOnClickListener
             }
 
             val question = mQuestionList!![mCurrentPosition - 1]
 
+            // Запоминаем ответ студента
             studentAnswers.add(
                 StudentAnswer(
                     questionId = question.id,
@@ -113,10 +202,13 @@ class SelfControlTheoryActivity : AppCompatActivity() {
                     ),
                     selectedAnswer = mSelectedOptionPosition,
                     correctAnswer = question.correctAnswer,
-                    isCorrect = mSelectedOptionPosition == question.correctAnswer
+                    isCorrect = (
+                            mSelectedOptionPosition == question.correctAnswer
+                            )
                 )
             )
 
+            // Подсчитываем правильные ответы
             if (mSelectedOptionPosition == question.correctAnswer) {
                 mCorrectAnswers++
             }
@@ -124,9 +216,13 @@ class SelfControlTheoryActivity : AppCompatActivity() {
             mSelectedOptionPosition = 0
             mCurrentPosition++
 
+            // Следующий вопрос или завершение теста
             if (mCurrentPosition <= mQuestionList!!.size) {
+
                 setQuestion()
+
             } else {
+
                 isTestCompleted = true
 
                 saveTestResult {
@@ -135,14 +231,55 @@ class SelfControlTheoryActivity : AppCompatActivity() {
             }
         }
 
+        // Выход из тестирования
         fabHome.setOnClickListener {
             onBackPressed()
         }
     }
 
+    // Сохранение состояния при пересоздании Activity
+    override fun onSaveInstanceState(outState: Bundle) {
+
+        outState.putString(
+            "result_document_id",
+            resultDocument.id
+        )
+
+        outState.putInt(
+            "current_position",
+            mCurrentPosition
+        )
+
+        outState.putInt(
+            "correct_answers",
+            mCorrectAnswers
+        )
+
+        outState.putInt(
+            "selected_option",
+            mSelectedOptionPosition
+        )
+
+        outState.putBoolean(
+            "test_completed",
+            isTestCompleted
+        )
+
+        outState.putParcelableArrayList(
+            "student_answers",
+            ArrayList(studentAnswers)
+        )
+
+        super.onSaveInstanceState(outState)
+    }
+
+    // Переход на экран результатов
     private fun openResultActivity() {
 
-        val intent = Intent(this, ResultActivity::class.java)
+        val intent = Intent(
+            this,
+            ResultActivity::class.java
+        )
 
         intent.putExtra(
             Constants.CORRECT_ANSWERS,
@@ -168,6 +305,7 @@ class SelfControlTheoryActivity : AppCompatActivity() {
         finish()
     }
 
+    // Сохранение результата теста №3
     private fun saveTestResult(onSuccess: () -> Unit) {
 
         if (isSaving) {
@@ -180,6 +318,7 @@ class SelfControlTheoryActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
 
         if (user == null) {
+
             isSaving = false
             btnSubmit.isEnabled = true
             btnSubmit.text = "Повторить сохранение"
@@ -189,57 +328,115 @@ class SelfControlTheoryActivity : AppCompatActivity() {
                 "Ошибка авторизации Firebase",
                 Toast.LENGTH_LONG
             ).show()
+
             return
         }
 
-        val answers = studentAnswers.map { answer ->
-            mapOf(
-                "questionId" to answer.questionId,
-                "questionText" to answer.questionText,
-                "options" to answer.options,
-                "selectedAnswer" to answer.selectedAnswer,
-                "correctAnswer" to answer.correctAnswer,
-                "isCorrect" to answer.isCorrect
-            )
-        }
+        try {
 
-        val result = hashMapOf<String, Any>(
-            "studentName" to StudentSession.getStudentName(this),
-            "studentGroup" to StudentSession.getStudentGroup(this),
-            "testNumber" to 3,
-            "correctAnswers" to mCorrectAnswers,
-            "totalQuestions" to mQuestionList!!.size,
-            "completedAt" to FieldValue.serverTimestamp(),
-            "answers" to answers,
-            "userId" to user.uid
-        )
-
-        resultDocument
-            .set(result)
-            .addOnSuccessListener {
-                isSaving = false
-
-                Toast.makeText(
-                    this,
-                    "Результат успешно сохранён",
-                    Toast.LENGTH_SHORT
-                ).show()
-
-                onSuccess()
+            // Подготавливаем ответы студента
+            val answers = studentAnswers.map { answer ->
+                mapOf(
+                    "questionId" to answer.questionId,
+                    "questionText" to answer.questionText,
+                    "options" to answer.options,
+                    "selectedAnswer" to answer.selectedAnswer,
+                    "correctAnswer" to answer.correctAnswer,
+                    "isCorrect" to answer.isCorrect
+                )
             }
-            .addOnFailureListener { exception ->
+
+            // Формируем локальный результат теста №3
+            val localResult = JSONObject().apply {
+
+                put(
+                    "studentName",
+                    StudentSession.getStudentName(
+                        this@SelfControlTheoryActivity
+                    )
+                )
+
+                put(
+                    "studentGroup",
+                    StudentSession.getStudentGroup(
+                        this@SelfControlTheoryActivity
+                    )
+                )
+
+                put("testNumber", 3)
+                put("correctAnswers", mCorrectAnswers)
+                put("totalQuestions", mQuestionList!!.size)
+                put("answers", JSONArray(answers))
+                put("userId", user.uid)
+            }
+
+            // Сначала сохраняем результат на устройстве
+            val savedLocally = PendingResultStorage.addResult(
+                applicationContext,
+                resultDocument.id,
+                localResult
+            )
+
+            if (!savedLocally) {
+
                 isSaving = false
                 btnSubmit.isEnabled = true
                 btnSubmit.text = "Повторить сохранение"
 
                 Toast.makeText(
                     this,
-                    "Ошибка сохранения: ${exception.localizedMessage}",
+                    "Не удалось сохранить результат на устройстве",
                     Toast.LENGTH_LONG
                 ).show()
+
+                return
             }
+
+            Log.d(
+                "PENDING_RESULTS",
+                "После локального сохранения теста №3: " +
+                        PendingResultStorage.getResults(
+                            applicationContext
+                        ).size
+            )
+
+            // Отправкой в Firestore занимается только
+            // PendingResultSync
+            PendingResultSync.sync(applicationContext)
+
+            // Завершаем тест после локального сохранения,
+            // не ожидая ответа Firestore
+            isSaving = false
+
+            Toast.makeText(
+                this,
+                "Результат сохранён на устройстве",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            onSuccess()
+
+        } catch (exception: Exception) {
+
+            isSaving = false
+            btnSubmit.isEnabled = true
+            btnSubmit.text = "Повторить сохранение"
+
+            Log.e(
+                "PENDING_RESULTS",
+                "Ошибка локального сохранения теста №3",
+                exception
+            )
+
+            Toast.makeText(
+                this,
+                "Не удалось сохранить результат теста",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 
+    // Отображение текущего вопроса
     private fun setQuestion() {
 
         val question = mQuestionList!![mCurrentPosition - 1]
@@ -253,11 +450,13 @@ class SelfControlTheoryActivity : AppCompatActivity() {
         tvProgress.text = "$mCurrentPosition/${progressBar.max}"
 
         tvQuestion.text = question.question
+
         tvOptionOne.text = question.optionOne
         tvOptionTwo.text = question.optionTwo
         tvOptionThree.text = question.optionThree
     }
 
+    // Сброс оформления вариантов ответа
     private fun defaultOptionsView() {
 
         val options = arrayListOf(
@@ -267,8 +466,13 @@ class SelfControlTheoryActivity : AppCompatActivity() {
         )
 
         for (option in options) {
-            option.setTextColor(Color.parseColor("#7A8089"))
+
+            option.setTextColor(
+                Color.parseColor("#7A8089")
+            )
+
             option.typeface = Typeface.DEFAULT
+
             option.background = ContextCompat.getDrawable(
                 this,
                 R.drawable.default_option_border_bg
@@ -276,17 +480,26 @@ class SelfControlTheoryActivity : AppCompatActivity() {
         }
     }
 
+    // Выделение выбранного варианта
     private fun selectedOptionView(
         tv: TextView,
         selectedOptionNum: Int
     ) {
+
         defaultOptionsView()
 
         btnSubmit.isEnabled = true
+
         mSelectedOptionPosition = selectedOptionNum
 
-        tv.setTextColor(Color.parseColor("#7A8089"))
-        tv.setTypeface(tv.typeface, Typeface.BOLD)
+        tv.setTextColor(
+            Color.parseColor("#7A8089")
+        )
+
+        tv.setTypeface(
+            tv.typeface,
+            Typeface.BOLD
+        )
 
         tv.background = ContextCompat.getDrawable(
             this,
@@ -294,18 +507,29 @@ class SelfControlTheoryActivity : AppCompatActivity() {
         )
     }
 
+    // Подтверждение выхода из тестирования
     override fun onBackPressed() {
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.txt_confirm))
             .setMessage(getString(R.string.txt_exit_question))
-            .setPositiveButton(getString(R.string.exit_yes)) { _, _ ->
+            .setPositiveButton(
+                getString(R.string.exit_yes)
+            ) { _, _ ->
+
                 startActivity(
-                    Intent(this, MainActivity::class.java)
+                    Intent(
+                        this,
+                        MainActivity::class.java
+                    )
                 )
+
                 finish()
             }
-            .setNegativeButton(getString(R.string.exit_no), null)
+            .setNegativeButton(
+                getString(R.string.exit_no),
+                null
+            )
             .show()
     }
 }

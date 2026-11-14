@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -12,7 +13,9 @@ import by.kos.quizzapp.databinding.ActivityQuizQuestionsBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import org.json.JSONObject
 
 class QuizQuestionsActivity : AppCompatActivity() {
 
@@ -45,12 +48,20 @@ class QuizQuestionsActivity : AppCompatActivity() {
     private var isSaving = false
 
     // Один идентификатор документа для повторных отправок
-    private val resultDocument = FirebaseFirestore.getInstance()
-        .collection("test_results")
-        .document()
+    private lateinit var resultDocument: DocumentReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val resultId = savedInstanceState?.getString("result_document_id")
+            ?: FirebaseFirestore.getInstance()
+                .collection("test_results")
+                .document()
+                .id
+
+        resultDocument = FirebaseFirestore.getInstance()
+            .collection("test_results")
+            .document(resultId)
 
         binding = ActivityQuizQuestionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -72,7 +83,42 @@ class QuizQuestionsActivity : AppCompatActivity() {
 
         progressBar.max = mQuestionList!!.size
 
-        setQuestion()
+        if (savedInstanceState != null) {
+            mCurrentPosition = savedInstanceState.getInt("current_position", 1)
+
+            mCorrectAnswers = savedInstanceState.getInt("correct_answers", 0)
+            mSelectedOptionPosition = savedInstanceState.getInt("selected_option", 0)
+            isTestCompleted = savedInstanceState.getBoolean("test_completed", false)
+
+            @Suppress("DEPRECATION")
+            val savedAnswers =
+                savedInstanceState.getParcelableArrayList<StudentAnswer>(
+                    "student_answers"
+                )
+
+            studentAnswers.clear()
+            studentAnswers.addAll(savedAnswers ?: emptyList())
+        }
+
+        if (isTestCompleted) {
+            btnSubmit.text = "Повторить сохранение"
+            btnSubmit.isEnabled = true
+        } else {
+            setQuestion()
+
+            if (mSelectedOptionPosition != 0) {
+                val selectedView = when (mSelectedOptionPosition) {
+                    1 -> tvOptionOne
+                    2 -> tvOptionTwo
+                    3 -> tvOptionThree
+                    else -> null
+                }
+
+                selectedView?.let {
+                    selectedOptionView(it, mSelectedOptionPosition)
+                }
+            }
+        }
 
         tvOptionOne.setOnClickListener {
             if (!isTestCompleted) {
@@ -161,6 +207,23 @@ class QuizQuestionsActivity : AppCompatActivity() {
     }
 
     // Переход на экран результатов
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putString("result_document_id", resultDocument.id)
+
+        outState.putInt("current_position", mCurrentPosition)
+        outState.putInt("correct_answers", mCorrectAnswers)
+        outState.putInt("selected_option", mSelectedOptionPosition)
+        outState.putBoolean("test_completed", isTestCompleted)
+
+        outState.putParcelableArrayList(
+            "student_answers",
+            ArrayList(studentAnswers)
+        )
+
+        super.onSaveInstanceState(outState)
+    }
+
     private fun openResultActivity() {
 
         val intent = Intent(
@@ -192,11 +255,11 @@ class QuizQuestionsActivity : AppCompatActivity() {
         finish()
     }
 
-    // Сохранение результата в Firebase Firestore
+
+
     private fun saveTestResult(
         onSuccess: () -> Unit
     ) {
-
         if (isSaving) {
             return
         }
@@ -205,9 +268,7 @@ class QuizQuestionsActivity : AppCompatActivity() {
         btnSubmit.isEnabled = false
 
         val user = FirebaseAuth.getInstance().currentUser
-
         if (user == null) {
-
             isSaving = false
             btnSubmit.isEnabled = true
             btnSubmit.text = "Повторить сохранение"
@@ -217,13 +278,11 @@ class QuizQuestionsActivity : AppCompatActivity() {
                 "Ошибка авторизации Firebase",
                 Toast.LENGTH_LONG
             ).show()
-
             return
         }
 
-        // Преобразуем ответы для Firestore
+        // Преобразуем ответы для сохранения
         val answers = studentAnswers.map { answer ->
-
             mapOf(
                 "questionId" to answer.questionId,
                 "questionText" to answer.questionText,
@@ -234,46 +293,57 @@ class QuizQuestionsActivity : AppCompatActivity() {
             )
         }
 
-        // Формируем документ результата
-        val result = hashMapOf<String, Any>(
-            "studentName" to (mUserName ?: ""),
-            "studentGroup" to (mUserGroup ?: ""),
-            "testNumber" to Constants.TEST_NUMBER,
-            "correctAnswers" to mCorrectAnswers,
-            "totalQuestions" to (mQuestionList?.size ?: 0),
-            "completedAt" to FieldValue.serverTimestamp(),
-            "answers" to answers,
-            "userId" to user.uid
+        // Подготавливаем локальную копию результата
+        val localResult = JSONObject().apply {
+            put("studentName", mUserName ?: "")
+            put("studentGroup", mUserGroup ?: "")
+            put("testNumber", Constants.TEST_NUMBER)
+            put("correctAnswers", mCorrectAnswers)
+            put("totalQuestions", mQuestionList?.size ?: 0)
+            put("answers", org.json.JSONArray(answers))
+            put("userId", user.uid)
+        }
+
+        // Сначала сохраняем результат на устройстве
+        val savedLocally = PendingResultStorage.addResult(
+            applicationContext,
+            resultDocument.id,
+            localResult
         )
 
-        // Отправляем данные
-        resultDocument
-            .set(result)
-            .addOnSuccessListener {
+        if (!savedLocally) {
+            isSaving = false
+            btnSubmit.isEnabled = true
+            btnSubmit.text = "Повторить сохранение"
 
-                isSaving = false
+            Toast.makeText(
+                this,
+                "Не удалось сохранить результат на устройстве",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
 
-                Toast.makeText(
-                    this,
-                    "Результат успешно сохранён",
-                    Toast.LENGTH_SHORT
-                ).show()
+        Log.d(
+            "PENDING_RESULTS",
+            "После локального сохранения: ${
+                PendingResultStorage.getResults(applicationContext).size
+            }"
+        )
 
-                onSuccess()
-            }
-            .addOnFailureListener { exception ->
+        // Передаём отправку единому механизму синхронизации
+        PendingResultSync.sync(applicationContext)
 
-                isSaving = false
+        // Не ждём ответа сервера
+        isSaving = false
 
-                btnSubmit.isEnabled = true
-                btnSubmit.text = "Повторить сохранение"
+        Toast.makeText(
+            this,
+            "Результат сохранён на устройстве",
+            Toast.LENGTH_SHORT
+        ).show()
 
-                Toast.makeText(
-                    this,
-                    "Ошибка сохранения: ${exception.localizedMessage}",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+        onSuccess()
     }
 
     // Отображение текущего вопроса
