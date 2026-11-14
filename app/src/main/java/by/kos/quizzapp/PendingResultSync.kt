@@ -26,6 +26,7 @@ object PendingResultSync {
     private var isSyncing = false
     private var generation = 0L
     private var checkTimeout: Runnable? = null
+    private var offlineMessageLogged = false
 
     @Suppress("DEPRECATION")
     private fun isInternetAvailable(context: Context): Boolean {
@@ -64,12 +65,21 @@ object PendingResultSync {
         val appContext = context.applicationContext
 
         if (!isInternetAvailable(appContext)) {
-            Log.d(
-                TAG,
-                "Интернет недоступен. Результаты остаются в очереди"
-            )
+
+            if (!offlineMessageLogged) {
+                Log.d(
+                    TAG,
+                    "Интернет недоступен. Результаты остаются в очереди"
+                )
+
+                offlineMessageLogged = true
+            }
+
             return
         }
+
+// Интернет восстановлен — разрешаем повторное сообщение
+        offlineMessageLogged = false
 
         val user = FirebaseAuth.getInstance().currentUser
 
