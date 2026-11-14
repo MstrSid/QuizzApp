@@ -50,3 +50,25 @@ keystore.properties
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Android Studio local settings
+.idea/deploymentTargetSelector.xml
+.idea/appInsightsSettings.xml
+
+# Firebase local files
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Node.js
+**/node_modules/
+
+# Local credentials
+.env
+.env.*
+!.env.example
+*service-account*.json
+*adminsdk*.json
+*.jks
+*.keystore
