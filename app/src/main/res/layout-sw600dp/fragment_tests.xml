@@ -22,6 +22,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Приветствие -->
             <TextView
                 android:id="@+id/cv_text_view_hello"
                 android:layout_width="match_parent"
@@ -33,57 +34,39 @@
                 android:textSize="45sp"
                 android:textStyle="bold" />
 
+            <!-- Подсказка -->
             <TextView
                 android:id="@+id/cv_text_view_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:background="#EDFBEC"
                 android:gravity="center"
-                android:text="@string/enter_name_txt"
+                android:text="Выберите тест для прохождения"
                 android:textColor="#757575"
                 android:textSize="20sp" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <!-- Первый тест -->
+            <Button
+                android:id="@+id/btn_start"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_height="70dp"
+                android:layout_marginTop="60dp"
+                android:background="@drawable/rect_rounded_button"
+                android:text="@string/btn_start_text"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
 
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/et_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/hint_name"
-                    android:lines="1"
-                    android:textColor="@color/dark_grey"
-                    android:textColorHint="@color/light_gray"
-                    android:textSize="32sp"
-                    tools:ignore="SpeakableTextPresentCheck">
-
-                </androidx.appcompat.widget.AppCompatEditText>
-
-                <Button
-                    android:id="@+id/btn_start"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rect_rounded_button"
-                    android:text="@string/btn_start_text"
-                    android:textColor="@color/white"
-                    android:textSize="32sp" />
-
-                <Button
-                    android:id="@+id/btn_start2"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rect_rounded_button"
-                    android:text="@string/btn_start_text2"
-                    android:textColor="@color/white"
-                    android:textSize="32sp">
-
-                </Button>
-            </com.google.android.material.textfield.TextInputLayout>
+            <!-- Второй тест -->
+            <Button
+                android:id="@+id/btn_start2"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rect_rounded_button"
+                android:text="@string/btn_start_text2"
+                android:textColor="@color/white"
+                android:textSize="32sp" />
 
         </LinearLayout>
 

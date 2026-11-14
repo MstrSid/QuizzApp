@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "361026824607",
+    "project_id": "pocketprocessingquiz",
+    "storage_bucket": "pocketprocessingquiz.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361026824607:android:0cda83e1533618c61275aa",
+        "android_client_info": {
+          "package_name": "by.kos.quizzapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4uWdIZQ0uskC6R74HYW_Ti-pWiRizaeQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

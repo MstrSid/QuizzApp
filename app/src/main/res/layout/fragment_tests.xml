@@ -22,6 +22,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
+            <!-- Приветствие -->
             <TextView
                 android:id="@+id/cv_text_view_hello"
                 android:layout_width="match_parent"
@@ -33,6 +34,7 @@
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
+            <!-- Пояснение -->
             <TextView
                 android:id="@+id/cv_text_view_name"
                 android:layout_width="match_parent"
@@ -43,6 +45,7 @@
                 android:textColor="#757575"
                 android:textSize="16sp" />
 
+            <!-- ФИО студента -->
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
@@ -54,36 +57,55 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/hint_name"
-                    android:lines="1"
+                    android:inputType="textCapWords|textPersonName"
+                    android:maxLines="1"
                     android:textColor="@color/dark_grey"
                     android:textColorHint="@color/light_gray"
-                    android:textSize="20sp"
-                    tools:ignore="SpeakableTextPresentCheck">
+                    android:textSize="20sp" />
 
-                </androidx.appcompat.widget.AppCompatEditText>
-
-                <Button
-                    android:id="@+id/btn_start"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rect_rounded_button"
-                    android:text="@string/btn_start_text"
-                    android:textColor="@color/white"
-                    android:textSize="22sp" />
-
-                <Button
-                    android:id="@+id/btn_start2"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/rect_rounded_button"
-                    android:text="@string/btn_start_text2"
-                    android:textColor="@color/white"
-                    android:textSize="22sp">
-
-                </Button>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Учебная группа -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/et_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Учебная группа"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="@color/dark_grey"
+                    android:textColorHint="@color/light_gray"
+                    android:textSize="20sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Первый тест -->
+            <Button
+                android:id="@+id/btn_start"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rect_rounded_button"
+                android:text="@string/btn_start_text"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
+
+            <!-- Второй тест -->
+            <Button
+                android:id="@+id/btn_start2"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/rect_rounded_button"
+                android:text="@string/btn_start_text2"
+                android:textColor="@color/white"
+                android:textSize="22sp" />
 
         </LinearLayout>
 
