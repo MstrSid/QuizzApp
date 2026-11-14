@@ -1,0 +1,768 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <title>QuizzApp — Преподаватель</title>
+
+    <style>
+        :root {
+          font-family: Arial, sans-serif;
+          color: #263238;
+          background: #f3f6fa;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+          margin: 0;
+          min-height: 100vh;
+        }
+
+        button, input, select {
+          font: inherit;
+        }
+
+        button {
+          cursor: pointer;
+          border: 0;
+          border-radius: 8px;
+          padding: 10px 16px;
+          background: #1769aa;
+          color: white;
+        }
+
+        button:hover { background: #12558a; }
+
+        button:disabled {
+          opacity: .6;
+          cursor: wait;
+        }
+
+        input, select {
+          border: 1px solid #cbd5e1;
+          border-radius: 8px;
+          padding: 10px;
+          background: white;
+          width: 100%;
+        }
+
+        .hidden { display: none !important; }
+
+        .login-container {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+
+        .login-card {
+          width: 100%;
+          max-width: 390px;
+          background: white;
+          padding: 30px;
+          border-radius: 14px;
+          box-shadow: 0 8px 30px #00000012;
+        }
+
+        .login-card h1 {
+          margin-top: 0;
+          color: #1769aa;
+        }
+
+        .login-card input {
+          margin-bottom: 12px;
+        }
+
+        .login-card button {
+          width: 100%;
+        }
+
+        .error {
+          color: #b42318;
+          margin-top: 12px;
+          white-space: pre-wrap;
+        }
+
+        header {
+          background: #1769aa;
+          color: white;
+          padding: 18px 24px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        header h1 {
+          font-size: 21px;
+          margin: 0;
+        }
+
+        header button {
+          background: #ffffff22;
+          border: 1px solid #ffffff77;
+        }
+
+        main {
+          max-width: 1200px;
+          margin: 24px auto;
+          padding: 0 16px;
+        }
+
+        .panel {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+          box-shadow: 0 2px 12px #0000000b;
+          margin-bottom: 20px;
+        }
+
+        .stats {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 12px;
+          margin-bottom: 20px;
+        }
+
+        .stat {
+          background: white;
+          padding: 20px;
+          border-radius: 12px;
+        }
+
+        .stat strong {
+          display: block;
+          font-size: 27px;
+          color: #1769aa;
+          margin-bottom: 6px;
+        }
+
+        .stat span {
+          color: #64748b;
+          font-size: 14px;
+        }
+
+        .filters {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          gap: 12px;
+          margin-bottom: 16px;
+        }
+
+        .table-wrap {
+          overflow-x: auto;
+        }
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        th, td {
+          padding: 13px 10px;
+          border-bottom: 1px solid #e2e8f0;
+          text-align: left;
+          vertical-align: middle;
+        }
+
+        th {
+          color: #64748b;
+          font-size: 13px;
+        }
+
+        .score {
+          font-weight: bold;
+        }
+
+        .good { color: #16803c; }
+        .bad { color: #c0392b; }
+
+        .question {
+          border: 1px solid #e2e8f0;
+          border-radius: 10px;
+          padding: 16px;
+          margin: 12px 0;
+        }
+
+        .question h3 {
+          margin-top: 0;
+          font-size: 16px;
+        }
+
+        .option {
+          padding: 9px 12px;
+          margin: 6px 0;
+          border-radius: 7px;
+          background: #f1f5f9;
+        }
+
+        .selected {
+          border: 2px solid #1769aa;
+        }
+
+        .correct {
+          background: #dcfce7;
+        }
+
+        .incorrect {
+          background: #fee2e2;
+        }
+
+        .option small {
+          display: block;
+          margin-top: 4px;
+          color: #475569;
+        }
+
+        .muted {
+          color: #64748b;
+        }
+
+        .detail-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        @media (max-width: 650px) {
+          .stats {
+            grid-template-columns: 1fr;
+          }
+
+          .filters {
+            grid-template-columns: 1fr;
+          }
+
+          .panel {
+            padding: 14px;
+          }
+        }
+    </style>
+</head>
+
+<body>
+
+<section id="loginPage" class="login-container">
+    <div class="login-card">
+        <h1>QuizzApp</h1>
+        <p>Панель преподавателя</p>
+
+        <form id="loginForm">
+            <input
+                    id="email"
+                    type="email"
+                    placeholder="Электронная почта"
+                    autocomplete="username"
+                    required
+            >
+
+            <input
+                    id="password"
+                    type="password"
+                    placeholder="Пароль"
+                    autocomplete="current-password"
+                    required
+            >
+
+            <button id="loginButton" type="submit">
+                Войти
+            </button>
+        </form>
+
+        <p id="loginError" class="error"></p>
+    </div>
+</section>
+
+<section id="dashboard" class="hidden">
+
+    <header>
+        <h1>QuizzApp — результаты тестирования</h1>
+        <button id="logoutButton">Выйти</button>
+    </header>
+
+    <main>
+
+        <div class="stats">
+            <div class="stat">
+                <strong id="totalResults">0</strong>
+                <span>Всего попыток</span>
+            </div>
+
+            <div class="stat">
+                <strong id="totalStudents">0</strong>
+                <span>Уникальных студентов*</span>
+            </div>
+
+            <div class="stat">
+                <strong id="averageScore">0%</strong>
+                <span>Средний результат</span>
+            </div>
+        </div>
+
+        <section id="resultsPanel" class="panel">
+            <div class="detail-header">
+                <h2>Результаты студентов</h2>
+                <button id="refreshButton">Обновить</button>
+            </div>
+
+            <div class="filters">
+                <input
+                        id="searchInput"
+                        placeholder="Поиск по ФИО или группе"
+                >
+
+                <select id="testFilter">
+                    <option value="all">Все тесты</option>
+                    <option value="1">Тест №1</option>
+                    <option value="2">Тест №2</option>
+                    <option value="3">Тест №3</option>
+                    <option value="4">Тест №4</option>
+                </select>
+            </div>
+
+            <p id="status" class="muted"></p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Студент</th>
+                        <th>Группа</th>
+                        <th>Тест</th>
+                        <th>Результат</th>
+                        <th>Дата</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="resultsBody"></tbody>
+                </table>
+            </div>
+
+            <p class="muted">
+                *Количество студентов определяется по сочетанию
+                ФИО и группы, а не по подтверждённому личному ID.
+            </p>
+        </section>
+
+        <section id="detailsPanel" class="panel hidden">
+            <div class="detail-header">
+                <h2 id="detailsTitle">Подробные ответы</h2>
+                <button id="backButton">Назад</button>
+            </div>
+
+            <p id="detailsInfo"></p>
+            <div id="answersContainer"></div>
+        </section>
+
+    </main>
+</section>
+
+<script type="module">
+
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    } from
+      "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+    import {
+      getFirestore,
+      collection,
+      getDocs
+    } from
+      "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD0TLCrKMJk_AK6JWEYDHuiEjdzGTKb_lM",
+      authDomain: "pocketprocessingquiz.firebaseapp.com",
+      projectId: "pocketprocessingquiz",
+      storageBucket: "pocketprocessingquiz.firebasestorage.app",
+      messagingSenderId: "361026824607",
+      appId: "1:361026824607:web:f24664cb5100720d1275aa"
+    };
+
+    const TEACHER_UID =
+      "a7C9Ht5MfUeP1785a1agXPbcs9b2";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const $ = id => document.getElementById(id);
+
+    let results = [];
+
+    function showLogin() {
+      $("loginPage").classList.remove("hidden");
+      $("dashboard").classList.add("hidden");
+      $("detailsPanel").classList.add("hidden");
+      results = [];
+    }
+
+    function showDashboard() {
+      $("loginPage").classList.add("hidden");
+      $("dashboard").classList.remove("hidden");
+      $("resultsPanel").classList.remove("hidden");
+      $("detailsPanel").classList.add("hidden");
+    }
+
+    function formatDate(value) {
+      if (!value) return "Нет даты";
+
+      try {
+        const date = typeof value.toDate === "function"
+          ? value.toDate()
+          : new Date(value);
+
+        if (Number.isNaN(date.getTime())) {
+          return "Нет даты";
+        }
+
+        return date.toLocaleString("ru-RU");
+      } catch {
+        return "Нет даты";
+      }
+    }
+
+    function percentage(result) {
+      const total = Number(result.totalQuestions) || 0;
+      const correct = Number(result.correctAnswers) || 0;
+
+      return total > 0
+        ? Math.round(correct / total * 100)
+        : 0;
+    }
+
+    function addText(parent, tag, value, className = "") {
+      const element = document.createElement(tag);
+      element.textContent = String(value ?? "");
+
+      if (className) {
+        element.className = className;
+      }
+
+      parent.appendChild(element);
+      return element;
+    }
+
+    async function loadResults() {
+      $("status").textContent = "Загрузка результатов...";
+      $("refreshButton").disabled = true;
+
+      try {
+        const snapshot = await getDocs(
+          collection(db, "test_results")
+        );
+
+        results = snapshot.docs.map(item => ({
+          id: item.id,
+          ...item.data()
+        }));
+
+        results.sort((a, b) => {
+          const timeA = a.completedAt?.toMillis?.() ?? 0;
+          const timeB = b.completedAt?.toMillis?.() ?? 0;
+          return timeB - timeA;
+        });
+
+        updateStatistics();
+        renderResults();
+
+      } catch (error) {
+        console.error("Ошибка загрузки:", error);
+        $("status").textContent =
+          "Не удалось загрузить результаты: " + error.code;
+      } finally {
+        $("refreshButton").disabled = false;
+      }
+    }
+
+    function updateStatistics() {
+      $("totalResults").textContent = results.length;
+
+      const uniqueStudents = new Set(
+        results.map(item =>
+          JSON.stringify([
+            String(item.studentName ?? "").trim().toLowerCase(),
+            String(item.studentGroup ?? "").trim().toLowerCase()
+          ])
+        )
+      );
+
+      $("totalStudents").textContent =
+        uniqueStudents.size;
+
+      const average = results.length
+        ? Math.round(
+            results.reduce(
+              (sum, item) => sum + percentage(item),
+              0
+            ) / results.length
+          )
+        : 0;
+
+      $("averageScore").textContent = average + "%";
+    }
+
+    function renderResults() {
+      const search = $("searchInput").value
+        .trim()
+        .toLowerCase();
+
+      const test = $("testFilter").value;
+
+      const filtered = results.filter(item => {
+        const name = String(item.studentName ?? "")
+          .toLowerCase();
+
+        const group = String(item.studentGroup ?? "")
+          .toLowerCase();
+
+        const matchesSearch =
+          name.includes(search) || group.includes(search);
+
+        const matchesTest =
+          test === "all" ||
+          String(item.testNumber) === test;
+
+        return matchesSearch && matchesTest;
+      });
+
+      const body = $("resultsBody");
+      body.replaceChildren();
+
+      for (const item of filtered) {
+        const row = document.createElement("tr");
+
+        addText(row, "td", item.studentName);
+        addText(row, "td", item.studentGroup);
+        addText(row, "td", "№" + item.testNumber);
+
+        addText(
+          row,
+          "td",
+          `${item.correctAnswers}/${item.totalQuestions} (${percentage(item)}%)`,
+          "score"
+        );
+
+        addText(
+          row,
+          "td",
+          formatDate(item.completedAt)
+        );
+
+        const actionCell = document.createElement("td");
+        const button = document.createElement("button");
+
+        button.textContent = "Ответы";
+        button.addEventListener("click", () => {
+          showDetails(item);
+        });
+
+        actionCell.appendChild(button);
+        row.appendChild(actionCell);
+        body.appendChild(row);
+      }
+
+      $("status").textContent =
+        `Показано результатов: ${filtered.length} из ${results.length}`;
+    }
+
+    function answerIndexes(answer, pluralKey, singleKey) {
+      const raw = Array.isArray(answer[pluralKey])
+        ? answer[pluralKey]
+        : answer[singleKey] === undefined
+          ? []
+          : [answer[singleKey]];
+
+      return raw.filter(
+        value => Number.isInteger(value) && value >= 0
+      );
+    }
+
+    function showDetails(result) {
+      $("resultsPanel").classList.add("hidden");
+      $("detailsPanel").classList.remove("hidden");
+
+      $("detailsTitle").textContent =
+        `Ответы — тест №${result.testNumber}`;
+
+      $("detailsInfo").textContent =
+        `${result.studentName} | ${result.studentGroup} | ` +
+        `${result.correctAnswers}/${result.totalQuestions} | ` +
+        formatDate(result.completedAt);
+
+      const container = $("answersContainer");
+      container.replaceChildren();
+
+      const answers = Array.isArray(result.answers)
+        ? result.answers
+        : [];
+
+      if (!answers.length) {
+        addText(
+          container,
+          "p",
+          "Подробные ответы отсутствуют.",
+          "muted"
+        );
+        return;
+      }
+
+      answers.forEach((answer, index) => {
+        const card = document.createElement("div");
+        card.className = "question";
+
+        addText(
+          card,
+          "h3",
+          `${index + 1}. ${answer.questionText ?? "Вопрос"}`
+        );
+
+        const selected = answerIndexes(
+          answer,
+          "selectedAnswers",
+          "selectedAnswer"
+        );
+
+        const correct = answerIndexes(
+          answer,
+          "correctAnswers",
+          "correctAnswer"
+        );
+
+        const isCorrect = answer.isCorrect === true;
+
+        addText(
+          card,
+          "p",
+          isCorrect ? "✓ Правильно" : "✗ Неправильно",
+          isCorrect ? "good" : "bad"
+        );
+
+        const options = Array.isArray(answer.options)
+          ? answer.options
+          : [];
+
+        options.forEach((option, optionIndex) => {
+          const isSelected = selected.includes(optionIndex);
+          const isRight = correct.includes(optionIndex);
+
+          const element = document.createElement("div");
+          element.className = "option";
+
+          if (isRight) {
+            element.classList.add("correct");
+          } else if (isSelected) {
+            element.classList.add("incorrect");
+          }
+
+          if (isSelected) {
+            element.classList.add("selected");
+          }
+
+          addText(
+            element,
+            "div",
+            `${optionIndex + 1}. ${option}`
+          );
+
+          const marks = [];
+
+          if (isSelected) {
+            marks.push("Выбран студентом");
+          }
+
+          if (isRight) {
+            marks.push("Правильный ответ");
+          }
+
+          if (marks.length) {
+            addText(
+              element,
+              "small",
+              marks.join(" · ")
+            );
+          }
+
+          card.appendChild(element);
+        });
+
+        container.appendChild(card);
+      });
+    }
+
+    $("loginForm").addEventListener("submit", async event => {
+      event.preventDefault();
+
+      $("loginError").textContent = "";
+      $("loginButton").disabled = true;
+
+      try {
+        const credential = await signInWithEmailAndPassword(
+          auth,
+          $("email").value.trim(),
+          $("password").value
+        );
+
+        if (credential.user.uid !== TEACHER_UID) {
+          await signOut(auth);
+          $("loginError").textContent =
+            "У этой учётной записи нет доступа преподавателя.";
+        }
+
+      } catch (error) {
+        console.error("Ошибка входа:", error.code);
+        $("loginError").textContent =
+          "Не удалось войти. Проверьте логин и пароль.";
+      } finally {
+        $("loginButton").disabled = false;
+      }
+    });
+
+    $("logoutButton").addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    $("refreshButton").addEventListener("click", loadResults);
+
+    $("searchInput").addEventListener("input", renderResults);
+    $("testFilter").addEventListener("change", renderResults);
+
+    $("backButton").addEventListener("click", () => {
+      $("detailsPanel").classList.add("hidden");
+      $("resultsPanel").classList.remove("hidden");
+    });
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) {
+        showLogin();
+        return;
+      }
+
+      if (user.uid !== TEACHER_UID) {
+        await signOut(auth);
+        return;
+      }
+
+      showDashboard();
+      await loadResults();
+    });
+
+</script>
+
+</body>
+</html>

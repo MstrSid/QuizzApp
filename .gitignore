@@ -1,15 +1,52 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+# Android / Gradle
+.gradle/
+**/build/
 local.properties
+*.iml
+.externalNativeBuild/
+.cxx/
+captures/
+
+# Android Studio
+.idea/
+*.apk
+*.aab
+*.ap_
+*.hprof
+
+# Node.js
+**/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Firebase Emulator
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+firestore-debug.*.log
+ui-debug.log
+database-debug.log
+firebase-export/
+.firebase/
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Credentials and private keys
+*service-account*.json
+*serviceAccount*.json
+*adminsdk*.json
+*.pem
+*.p12
+*.pfx
+*.keystore
+*.jks
+keystore.properties
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

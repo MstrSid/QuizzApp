@@ -1,0 +1,74 @@
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isTeacher() {
+      return request.auth != null
+        && request.auth.uid == "a7C9Ht5MfUeP1785a1agXPbcs9b2"
+        && request.auth.token.firebase.sign_in_provider == "password";
+    }
+
+    function isAnonymousStudent() {
+      return request.auth != null
+        && request.auth.token.firebase.sign_in_provider == "anonymous";
+    }
+
+    match /test_results/{resultId} {
+
+      allow create: if isAnonymousStudent()
+        && request.resource.data.keys().hasOnly([
+          "studentName",
+          "studentGroup",
+          "testNumber",
+          "correctAnswers",
+          "totalQuestions",
+          "completedAt",
+          "answers",
+          "userId"
+        ])
+        && request.resource.data.keys().hasAll([
+          "studentName",
+          "studentGroup",
+          "testNumber",
+          "correctAnswers",
+          "totalQuestions",
+          "completedAt",
+          "answers",
+          "userId"
+        ])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.studentName is string
+        && request.resource.data.studentName.size() >= 1
+        && request.resource.data.studentName.size() <= 150
+        && request.resource.data.studentGroup is string
+        && request.resource.data.studentGroup.size() >= 1
+        && request.resource.data.studentGroup.size() <= 50
+        && request.resource.data.testNumber in [1, 2, 3, 4]
+        && request.resource.data.correctAnswers is int
+        && request.resource.data.totalQuestions is int
+        && request.resource.data.totalQuestions >= 1
+        && request.resource.data.totalQuestions <= 20
+        && request.resource.data.correctAnswers >= 0
+        && request.resource.data.correctAnswers <= request.resource.data.totalQuestions
+        && request.resource.data.completedAt is timestamp
+        && request.resource.data.completedAt == request.time
+        && request.resource.data.answers is list
+        && request.resource.data.answers.size() == request.resource.data.totalQuestions;
+
+      allow get: if isTeacher()
+        || (
+          isAnonymousStudent()
+          && (
+            !exists(/databases/$(database)/documents/test_results/$(resultId))
+            || resource.data.userId == request.auth.uid
+          )
+        );
+
+      allow list: if isTeacher();
+
+      allow update, delete: if false;
+    }
+  }
+}
