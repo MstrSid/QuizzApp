@@ -111,9 +111,9 @@ class MainActivity : AppCompatActivity() {
             builder.show()
         }
 
-        fabInfo.setOnLongClickListener {
+
+        binding.btnChangeStudent?.setOnClickListener {
             showStudentDialog()
-            true
         }
 
         // Настройка вкладок
