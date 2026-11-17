@@ -188,6 +188,9 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        etName.setText(StudentSession.getStudentName(this))
+        etGroup.setText(StudentSession.getStudentGroup(this))
+
         layout.addView(
             etName,
             LinearLayout.LayoutParams(
