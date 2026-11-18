@@ -208,12 +208,13 @@ class MainActivity : AppCompatActivity() {
         )
 
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Данные студента")
+            .setTitle("Данные учащегося")
             .setMessage(
                 "Введите ФИО и учебную группу для прохождения тестирования."
             )
             .setView(layout)
             .setPositiveButton("Сохранить", null)
+            .setNegativeButton("Отмена", null)
             .create()
 
         // Нельзя закрыть окно без заполнения данных

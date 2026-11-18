@@ -1,4 +1,3 @@
-
 package by.kos.quizzapp
 
 import android.app.AlertDialog
@@ -50,6 +49,8 @@ class TaskActivity : AppCompatActivity() {
 
     private var isTestCompleted = false
     private var isSaving = false
+    private var isAnswerChecked = false
+    private var isRestoringOptions = false
 
     private lateinit var resultDocument: DocumentReference
 
@@ -101,6 +102,7 @@ class TaskActivity : AppCompatActivity() {
             isTestCompleted = savedInstanceState.getBoolean(
                 "test_completed", false
             )
+            isAnswerChecked = savedInstanceState.getBoolean("answer_checked", false)
 
             val selectedOptions = savedInstanceState
                 .getIntegerArrayList("selected_options")
@@ -139,6 +141,10 @@ class TaskActivity : AppCompatActivity() {
 
             // Восстанавливаем выбранные варианты
             restoreSelectedOptions(selectedOptions)
+            if (isAnswerChecked) {
+                showAnswerFeedback()
+                updateCheckedButtonText()
+            }
         }
 
         btnSubmit.setOnClickListener {
@@ -150,6 +156,20 @@ class TaskActivity : AppCompatActivity() {
             if (isTestCompleted) {
                 saveTestResult {
                     openResultActivity()
+                }
+                return@setOnClickListener
+            }
+
+            if (isAnswerChecked) {
+                isAnswerChecked = false
+                mSelectedOptionPosition.clear()
+                mCurrentPosition++
+                if (mCurrentPosition <= mQuestionList!!.size) {
+                    setQuestion()
+                } else {
+                    isTestCompleted = true
+                    showCompletedState()
+                    saveTestResult { openResultActivity() }
                 }
                 return@setOnClickListener
             }
@@ -183,23 +203,9 @@ class TaskActivity : AppCompatActivity() {
                 mCorrectAnswers++
             }
 
-            mSelectedOptionPosition.clear()
-            mCurrentPosition++
-
-            if (mCurrentPosition <= mQuestionList!!.size) {
-
-                setQuestion()
-
-            } else {
-
-                isTestCompleted = true
-
-                showCompletedState()
-
-                saveTestResult {
-                    openResultActivity()
-                }
-            }
+            isAnswerChecked = true
+            showAnswerFeedback()
+            updateCheckedButtonText()
         }
 
         fabHome.setOnClickListener {
@@ -229,6 +235,7 @@ class TaskActivity : AppCompatActivity() {
             "test_completed",
             isTestCompleted
         )
+        outState.putBoolean("answer_checked", isAnswerChecked)
 
         outState.putIntegerArrayList(
             "selected_options",
@@ -342,6 +349,7 @@ class TaskActivity : AppCompatActivity() {
             chOptionFour
         )
 
+        isRestoringOptions = true
         mSelectedOptionPosition.clear()
 
         checkBoxes.forEachIndexed { index, checkBox ->
@@ -359,6 +367,7 @@ class TaskActivity : AppCompatActivity() {
 
         mSelectedOptionPosition.clear()
         mSelectedOptionPosition.addAll(selectedOptions)
+        isRestoringOptions = false
 
         btnSubmit.isEnabled =
             mSelectedOptionPosition.isNotEmpty()
@@ -399,7 +408,7 @@ class TaskActivity : AppCompatActivity() {
 
         checkBox.setOnCheckedChangeListener { _, isChecked ->
 
-            if (isTestCompleted || isSaving) {
+            if (isRestoringOptions || isTestCompleted || isSaving || isAnswerChecked) {
                 return@setOnCheckedChangeListener
             }
 
@@ -468,10 +477,13 @@ class TaskActivity : AppCompatActivity() {
             chOptionFour
         )
 
+        isRestoringOptions = true
         checkBoxes.forEach { checkBox ->
             checkBox.isChecked = false
             updateOptionAppearance(checkBox, false)
         }
+        isRestoringOptions = false
+        checkBoxes.forEach { it.isEnabled = true }
 
         btnSubmit.isEnabled = false
         btnSubmit.text = getString(R.string.answer_text_btn)
@@ -496,6 +508,39 @@ class TaskActivity : AppCompatActivity() {
         chOptionTwo.text = question.options[1]
         chOptionThree.text = question.options[2]
         chOptionFour.text = question.options[3]
+    }
+
+    private fun updateCheckedButtonText() {
+        btnSubmit.text = if (mCurrentPosition == mQuestionList!!.size) {
+            "Завершить тест"
+        } else {
+            "Следующий вопрос"
+        }
+        btnSubmit.isEnabled = true
+    }
+
+    private fun showAnswerFeedback() {
+        val correct = mQuestionList!![mCurrentPosition - 1].correctOptions.toSet()
+        val checkBoxes = listOf(chOptionOne, chOptionTwo, chOptionThree, chOptionFour)
+        checkBoxes.forEachIndexed { index, checkBox ->
+            val number = index + 1
+            val drawable = when {
+                number in correct -> R.drawable.correct_option_border_bg
+                number in mSelectedOptionPosition -> R.drawable.wrong_option_border_bg
+                else -> R.drawable.default_option_border_bg
+            }
+            checkBox.background = ContextCompat.getDrawable(this, drawable)
+            checkBox.setTextColor(
+                if (number in correct || number in mSelectedOptionPosition) Color.BLACK else Color.parseColor(
+                    "#7A8089"
+                )
+            )
+            checkBox.setTypeface(
+                Typeface.DEFAULT,
+                if (number in correct || number in mSelectedOptionPosition) Typeface.BOLD else Typeface.NORMAL
+            )
+            checkBox.isEnabled = !isAnswerChecked
+        }
     }
 
     // Переход к результатам

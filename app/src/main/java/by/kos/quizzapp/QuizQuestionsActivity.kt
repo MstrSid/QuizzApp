@@ -41,6 +41,9 @@ class QuizQuestionsActivity : AppCompatActivity() {
     private var mUserName: String? = null
     private var mUserGroup: String? = null
 
+    // Ответ проверен, ожидается переход к следующему вопросу
+    private var isAnswerChecked = false
+
     // Признак завершения теста
     private var isTestCompleted = false
 
@@ -89,6 +92,7 @@ class QuizQuestionsActivity : AppCompatActivity() {
             mCorrectAnswers = savedInstanceState.getInt("correct_answers", 0)
             mSelectedOptionPosition = savedInstanceState.getInt("selected_option", 0)
             isTestCompleted = savedInstanceState.getBoolean("test_completed", false)
+            isAnswerChecked = savedInstanceState.getBoolean("answer_checked", false)
 
             @Suppress("DEPRECATION")
             val savedAnswers =
@@ -106,34 +110,30 @@ class QuizQuestionsActivity : AppCompatActivity() {
         } else {
             setQuestion()
 
-            if (mSelectedOptionPosition != 0) {
-                val selectedView = when (mSelectedOptionPosition) {
-                    1 -> tvOptionOne
-                    2 -> tvOptionTwo
-                    3 -> tvOptionThree
-                    else -> null
-                }
-
-                selectedView?.let {
-                    selectedOptionView(it, mSelectedOptionPosition)
-                }
+            if (isAnswerChecked) {
+                val question = mQuestionList!![mCurrentPosition - 1]
+                showAnswerFeedback(question.correctAnswer, mSelectedOptionPosition)
+                updateNextButtonText()
+            } else if (mSelectedOptionPosition != 0) {
+                val selectedView = optionView(mSelectedOptionPosition)
+                selectedView?.let { selectedOptionView(it, mSelectedOptionPosition) }
             }
         }
 
         tvOptionOne.setOnClickListener {
-            if (!isTestCompleted) {
+            if (!isTestCompleted && !isAnswerChecked) {
                 selectedOptionView(tvOptionOne, 1)
             }
         }
 
         tvOptionTwo.setOnClickListener {
-            if (!isTestCompleted) {
+            if (!isTestCompleted && !isAnswerChecked) {
                 selectedOptionView(tvOptionTwo, 2)
             }
         }
 
         tvOptionThree.setOnClickListener {
-            if (!isTestCompleted) {
+            if (!isTestCompleted && !isAnswerChecked) {
                 selectedOptionView(tvOptionThree, 3)
             }
         }
@@ -153,14 +153,29 @@ class QuizQuestionsActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            // Нельзя подтвердить ответ без выбора варианта
+            // Второе нажатие: переходим дальше, не записывая ответ повторно.
+            if (isAnswerChecked) {
+                isAnswerChecked = false
+                mSelectedOptionPosition = 0
+                mCurrentPosition++
+
+                if (mCurrentPosition <= mQuestionList!!.size) {
+                    setQuestion()
+                } else {
+                    isTestCompleted = true
+                    saveTestResult { openResultActivity() }
+                }
+                return@setOnClickListener
+            }
+
+            // Первое нажатие: проверяем и показываем результат.
             if (mSelectedOptionPosition == 0) {
                 return@setOnClickListener
             }
 
             val question = mQuestionList!![mCurrentPosition - 1]
+            val isCorrect = mSelectedOptionPosition == question.correctAnswer
 
-            // Запоминаем выбранный ответ
             studentAnswers.add(
                 StudentAnswer(
                     questionId = question.id,
@@ -172,32 +187,17 @@ class QuizQuestionsActivity : AppCompatActivity() {
                     ),
                     selectedAnswer = mSelectedOptionPosition,
                     correctAnswer = question.correctAnswer,
-                    isCorrect =
-                        mSelectedOptionPosition == question.correctAnswer
+                    isCorrect = isCorrect
                 )
             )
 
-            // Подсчитываем правильные ответы,
-            // не показывая студенту результат
-            if (mSelectedOptionPosition == question.correctAnswer) {
+            if (isCorrect) {
                 mCorrectAnswers++
             }
 
-            mSelectedOptionPosition = 0
-
-            // Переходим к следующему вопросу
-            mCurrentPosition++
-
-            if (mCurrentPosition <= mQuestionList!!.size) {
-                setQuestion()
-            } else {
-                // Все вопросы пройдены
-                isTestCompleted = true
-
-                saveTestResult {
-                    openResultActivity()
-                }
-            }
+            isAnswerChecked = true
+            showAnswerFeedback(question.correctAnswer, mSelectedOptionPosition)
+            updateNextButtonText()
         }
 
 
@@ -215,6 +215,7 @@ class QuizQuestionsActivity : AppCompatActivity() {
         outState.putInt("correct_answers", mCorrectAnswers)
         outState.putInt("selected_option", mSelectedOptionPosition)
         outState.putBoolean("test_completed", isTestCompleted)
+        outState.putBoolean("answer_checked", isAnswerChecked)
 
         outState.putParcelableArrayList(
             "student_answers",
@@ -254,7 +255,6 @@ class QuizQuestionsActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
 
 
     private fun saveTestResult(
@@ -425,6 +425,46 @@ class QuizQuestionsActivity : AppCompatActivity() {
                 this,
                 R.drawable.selected_option_border_bg
             )
+    }
+
+    private fun optionView(position: Int): TextView? = when (position) {
+        1 -> tvOptionOne
+        2 -> tvOptionTwo
+        3 -> tvOptionThree
+        else -> null
+    }
+
+    private fun updateNextButtonText() {
+        btnSubmit.isEnabled = true
+        btnSubmit.text = if (mCurrentPosition == mQuestionList!!.size) {
+            "Завершить тест"
+        } else {
+            "Следующий вопрос"
+        }
+    }
+
+    private fun showAnswerFeedback(correctAnswer: Int, selectedAnswer: Int) {
+        defaultOptionsView()
+
+        optionView(correctAnswer)?.apply {
+            background = ContextCompat.getDrawable(
+                this@QuizQuestionsActivity,
+                R.drawable.correct_option_border_bg
+            )
+            setTextColor(Color.BLACK)
+            setTypeface(null, Typeface.BOLD)
+        }
+
+        if (selectedAnswer != correctAnswer) {
+            optionView(selectedAnswer)?.apply {
+                background = ContextCompat.getDrawable(
+                    this@QuizQuestionsActivity,
+                    R.drawable.wrong_option_border_bg
+                )
+                setTextColor(Color.BLACK)
+                setTypeface(null, Typeface.BOLD)
+            }
+        }
     }
 
     // Подтверждение выхода из теста

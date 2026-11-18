@@ -1,4 +1,3 @@
-
 package by.kos.quizzapp
 
 import android.app.AlertDialog
@@ -43,6 +42,7 @@ class SelfControlTheoryActivity : AppCompatActivity() {
 
     private var isTestCompleted = false
     private var isSaving = false
+    private var isAnswerChecked = false
 
     // Документ Firestore для текущей попытки
     private lateinit var resultDocument: DocumentReference
@@ -99,6 +99,7 @@ class SelfControlTheoryActivity : AppCompatActivity() {
                 "test_completed",
                 false
             )
+            isAnswerChecked = savedInstanceState.getBoolean("answer_checked", false)
 
             @Suppress("DEPRECATION")
             val savedAnswers =
@@ -145,25 +146,29 @@ class SelfControlTheoryActivity : AppCompatActivity() {
                     selectedOptionView(it, selectedPosition)
                 }
             }
+            if (isAnswerChecked) {
+                showAnswerFeedback()
+                updateCheckedButtonText()
+            }
         }
 
         // Выбор первого варианта
         tvOptionOne.setOnClickListener {
-            if (!isTestCompleted && !isSaving) {
+            if (!isTestCompleted && !isSaving && !isAnswerChecked) {
                 selectedOptionView(tvOptionOne, 1)
             }
         }
 
         // Выбор второго варианта
         tvOptionTwo.setOnClickListener {
-            if (!isTestCompleted && !isSaving) {
+            if (!isTestCompleted && !isSaving && !isAnswerChecked) {
                 selectedOptionView(tvOptionTwo, 2)
             }
         }
 
         // Выбор третьего варианта
         tvOptionThree.setOnClickListener {
-            if (!isTestCompleted && !isSaving) {
+            if (!isTestCompleted && !isSaving && !isAnswerChecked) {
                 selectedOptionView(tvOptionThree, 3)
             }
         }
@@ -179,6 +184,19 @@ class SelfControlTheoryActivity : AppCompatActivity() {
             if (isTestCompleted) {
                 saveTestResult {
                     openResultActivity()
+                }
+                return@setOnClickListener
+            }
+
+            if (isAnswerChecked) {
+                isAnswerChecked = false
+                mSelectedOptionPosition = 0
+                mCurrentPosition++
+                if (mCurrentPosition <= mQuestionList!!.size) {
+                    setQuestion()
+                } else {
+                    isTestCompleted = true
+                    saveTestResult { openResultActivity() }
                 }
                 return@setOnClickListener
             }
@@ -213,22 +231,9 @@ class SelfControlTheoryActivity : AppCompatActivity() {
                 mCorrectAnswers++
             }
 
-            mSelectedOptionPosition = 0
-            mCurrentPosition++
-
-            // Следующий вопрос или завершение теста
-            if (mCurrentPosition <= mQuestionList!!.size) {
-
-                setQuestion()
-
-            } else {
-
-                isTestCompleted = true
-
-                saveTestResult {
-                    openResultActivity()
-                }
-            }
+            isAnswerChecked = true
+            showAnswerFeedback()
+            updateCheckedButtonText()
         }
 
         // Выход из тестирования
@@ -264,6 +269,7 @@ class SelfControlTheoryActivity : AppCompatActivity() {
             "test_completed",
             isTestCompleted
         )
+        outState.putBoolean("answer_checked", isAnswerChecked)
 
         outState.putParcelableArrayList(
             "student_answers",
@@ -505,6 +511,38 @@ class SelfControlTheoryActivity : AppCompatActivity() {
             this,
             R.drawable.selected_option_border_bg
         )
+    }
+
+    private fun updateCheckedButtonText() {
+        btnSubmit.text = if (mCurrentPosition == mQuestionList!!.size) {
+            "Завершить тест"
+        } else {
+            "Следующий вопрос"
+        }
+        btnSubmit.isEnabled = true
+    }
+
+    private fun showAnswerFeedback() {
+        val question = mQuestionList!![mCurrentPosition - 1]
+        val options = listOf(tvOptionOne, tvOptionTwo, tvOptionThree)
+        options.forEachIndexed { index, option ->
+            val number = index + 1
+            val drawable = when {
+                number == question.correctAnswer -> R.drawable.correct_option_border_bg
+                number == mSelectedOptionPosition -> R.drawable.wrong_option_border_bg
+                else -> R.drawable.default_option_border_bg
+            }
+            option.background = ContextCompat.getDrawable(this, drawable)
+            option.setTextColor(
+                if (number == question.correctAnswer || number == mSelectedOptionPosition) Color.BLACK else Color.parseColor(
+                    "#7A8089"
+                )
+            )
+            option.setTypeface(
+                Typeface.DEFAULT,
+                if (number == question.correctAnswer || number == mSelectedOptionPosition) Typeface.BOLD else Typeface.NORMAL
+            )
+        }
     }
 
     // Подтверждение выхода из тестирования
