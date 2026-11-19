@@ -11,10 +11,10 @@ class VPAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> TestsFragment()
-            1 -> MiniTestsFragment()
-            2 -> LearningFragment()
-            else -> TestsFragment()
+            0 -> LearningFragment()
+            1 -> TestsFragment()
+            2 -> MiniTestsFragment()
+            else -> LearningFragment()
         }
     }
 }

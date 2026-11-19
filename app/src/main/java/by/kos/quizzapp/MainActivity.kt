@@ -125,6 +125,14 @@ class MainActivity : AppCompatActivity() {
             when (position) {
 
                 0 -> {
+                    tab.text = "Учебное"
+                    tab.icon = ContextCompat.getDrawable(
+                        this,
+                        R.drawable.ic_book_24
+                    )
+                }
+
+                1 -> {
                     tab.text = "Тесты"
                     tab.icon = ContextCompat.getDrawable(
                         this,
@@ -132,19 +140,11 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
 
-                1 -> {
+                2 -> {
                     tab.text = "Закрепление"
                     tab.icon = ContextCompat.getDrawable(
                         this,
                         R.drawable.ic_check_24
-                    )
-                }
-
-                2 -> {
-                    tab.text = "Учебное"
-                    tab.icon = ContextCompat.getDrawable(
-                        this,
-                        R.drawable.ic_book_24
                     )
                 }
             }
