@@ -13,4 +13,7 @@
     <string name="test_done_text">Тест закончен!</string>
     <string name="btn_exit_text">ВЫЙТИ</string>
     <string name="home">Home</string>
+    <string name="tab_learning">Учебные м-лы</string>
+    <string name="tab_tests">Тесты</string>
+    <string name="tab_tasks">Закрепление</string>
 </resources>

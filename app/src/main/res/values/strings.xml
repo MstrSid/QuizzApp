@@ -37,4 +37,7 @@
     <string name="exit_main_question">Выйти на главный экран?</string>
     <string name="info">Info</string>
     <string name="txt_exit_another">Выйти из приложения?</string>
+    <string name="tab_learning">Учебные м-лы</string>
+    <string name="tab_tests">Тесты</string>
+    <string name="tab_tasks">Закрепление</string>
 </resources>

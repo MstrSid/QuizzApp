@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
             when (position) {
 
                 0 -> {
-                    tab.text = "Учебное"
+                    tab.setText(R.string.tab_learning)
                     tab.icon = ContextCompat.getDrawable(
                         this,
                         R.drawable.ic_book_24
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 1 -> {
-                    tab.text = "Тесты"
+                    tab.setText(R.string.tab_tests)
                     tab.icon = ContextCompat.getDrawable(
                         this,
                         R.drawable.ic_test_24
@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 2 -> {
-                    tab.text = "Закрепление"
+                    tab.setText(R.string.tab_tasks)
                     tab.icon = ContextCompat.getDrawable(
                         this,
                         R.drawable.ic_check_24

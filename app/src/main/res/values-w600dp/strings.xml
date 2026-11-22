@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_learning">Учебные материалы</string>
+    <string name="tab_tests">Тесты</string>
+    <string name="tab_tasks">Закрепление</string>
+</resources>
